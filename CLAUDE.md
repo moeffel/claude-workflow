@@ -49,23 +49,35 @@ Search for existing solutions before building. Use in this order:
    - RED: Write test first, verify it fails
    - GREEN: Write minimal implementation to pass
    - IMPROVE: Refactor, verify 80%+ coverage
+4. After each file edit, `quality-gate` runs automatically (PostToolUse hook if configured)
 
 ### Step 4: Review
 
 1. Invoke `superpowers:requesting-code-review`
-2. Use language-specific reviewer: `python-reviewer` / `typescript-reviewer` / `go-reviewer` / `rust-reviewer`
+2. Use language-specific reviewer: `python-reviewer` / `typescript-reviewer` / `go-reviewer` / `rust-reviewer` / `cpp-reviewer` / `kotlin-reviewer` / `java-reviewer` / `flutter-reviewer`
 3. Use `security-reviewer` when touching auth, user input, DB queries, API endpoints, crypto, payments
+4. Use `database-reviewer` when writing SQL, creating migrations, or designing schemas
 
 ### Step 5: Verify
 
 1. Invoke `superpowers:verification-before-completion` + `verify`
-2. Never say "done" without running this step
+2. Run `context-budget` to check token consumption before wrapping up
+3. Never say "done" without running this step
 
 ### Step 6: Git
 
 1. `superpowers:finishing-a-development-branch`
 2. `superpowers:using-git-worktrees` for feature isolation
 3. Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`
+
+### Step 7: Learn (after completing a task)
+
+1. Run `learn` / `learn-eval` to extract reusable patterns from the session
+2. Instincts are saved per-project and can be promoted to global with `promote`
+3. Run `instinct-status` to see accumulated learnings
+4. Run `prune` periodically to clean stale instincts
+
+---
 
 ## Model-Routing
 
@@ -91,9 +103,33 @@ MANDATORY for ANY UI/design task:
 
 For complex tasks:
 1. **PLAN** → Claude (Opus) writes plan in `docs/superpowers/plans/`
-2. **QA REVIEW** → Codex reviews plan against real code
+2. **QA REVIEW** → Codex reviews plan against real code (`codex:rescue`)
 3. **IMPLEMENT** → Claude executes with test gates
 4. **VERIFY** → Codex verifies implementation
+
+Invoke `cross-model` skill for handoff protocols.
+
+## Context & Session Management
+
+| Situation | Skill |
+|-----------|-------|
+| Context window filling up | `strategic-compact` — suggests manual compaction at logical intervals |
+| Token budget unclear | `context-budget` — audits consumption across agents, skills, MCPs |
+| End of session | `save-session` — persist session state for resume |
+| Resume previous work | `resume-session` — load last session file |
+| Multi-session work | `long-term-agent-ops` — loop selection, checkpoints, stall detection |
+
+## Quality & Learning
+
+| Trigger | Skill |
+|---------|-------|
+| After each file edit | `quality-gate` — automated quality check (PostToolUse) |
+| After completing a task | `learn` / `learn-eval` — extract reusable patterns |
+| View learned patterns | `instinct-status` — show instincts with confidence |
+| Promote to global | `promote` — move project instincts to global scope |
+| Clean stale patterns | `prune` — delete pending instincts older than 30 days |
+| Evaluate session quality | `eval` — formal evaluation of session against goals |
+| Evolve patterns | `evolve` — analyze instincts and suggest improvements |
 
 ## Bei Problemen
 
@@ -101,8 +137,10 @@ For complex tasks:
 |-----------|-------|
 | Bug/Fehler | `superpowers:systematic-debugging` |
 | Build bricht | `build-fix` / `build-error-resolver` Agent |
-| Kontext wird voll | `superpowers:strategic-compact` |
+| Kontext wird voll | `strategic-compact` + `context-budget` |
 | Loop stalled | `long-term-agent-ops` |
+| Need second opinion | `codex:rescue` — delegate to Codex for investigation |
+| Security concern | `security-scan` — scan .claude/ config for vulnerabilities |
 
 ## Coding Standards
 
@@ -124,5 +162,24 @@ Use agents proactively without waiting for user prompt:
 | Architectural decision | **architect** |
 | Security-sensitive code | **security-reviewer** |
 | Build failure | **build-error-resolver** |
+| Database changes | **database-reviewer** |
+| Dead code / cleanup | **refactor-cleaner** |
+| Documentation updates | **doc-updater** |
+| E2E test needed | **e2e-runner** |
+| Performance issue | **performance-optimizer** |
 
 ALWAYS use parallel agent execution for independent operations.
+
+## Multi-Agent Patterns
+
+For complex multi-agent work, consult these skills:
+
+| Pattern | Skill |
+|---------|-------|
+| Team composition | `team-builder` — interactive agent picker |
+| Orchestration strategy | `orchestrate` — sequential vs tmux/worktree guidance |
+| Parallel agents from plan | `superpowers:dispatching-parallel-agents` |
+| DevFleet (parallel Claude instances) | `devfleet` / `claude-devfleet` |
+| Harness design | `harness-designer` — build new agent systems from scratch |
+| Battle-tested patterns | `harness-patterns` — GAN-evaluator, sprint contracts, bias elimination |
+| Autonomous loops | `autonomous-loops` — continuous agent loop architectures |
