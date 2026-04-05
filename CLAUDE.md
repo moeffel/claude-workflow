@@ -1,10 +1,6 @@
-# PI CEO AGENTS
+# CEO & Board — Multi-Agent Decision System
 
-A **CEO & Board Multi-Agent Decision-Making System** built on the [PI Agent Harness](https://github.com/badlogic/pi-mono). Based on [IndyDevDan's architecture](https://agenticengineer.com/).
-
-## What This Is
-
-An Opus 4.6 CEO agent orchestrates 6 Sonnet 4.6 board members in adversarial debate to produce strategic decision memos for **any type of decision** — career, business, investment, technology, strategy, personal life. All decisions are held to an objectivity standard with mandatory cognitive bias checking. Input: structured briefs. Output: actionable memos with bias analysis.
+A CEO agent (Opus 4.6) orchestrates 6 board members (Sonnet 4.6) in adversarial debate. Built on the PI Agent Harness. Input: structured briefs. Output: decision memos with bias analysis.
 
 ## Tech Stack
 
@@ -14,7 +10,19 @@ An Opus 4.6 CEO agent orchestrates 6 Sonnet 4.6 board members in adversarial deb
 - **Config Parsing**: `yaml` (npm)
 - **Task Runner**: [Just](https://github.com/casey/just) (`j ceo`)
 - **Models**: Opus 4.6 (CEO), Sonnet 4.6 (Board Members)
-- **Node**: v25.8.0
+- **Node**: v22+
+
+## Commands
+
+```bash
+just ceo              # Start CEO & Board session
+just briefs           # List available briefs
+just new-brief NAME   # Create brief from template
+just memos            # List generated memos
+just roster           # Show board members
+just expertise        # Show agent expertise/memory
+just clean-debates    # Remove debate artifacts
+```
 
 ## Architecture
 
@@ -26,14 +34,12 @@ An Opus 4.6 CEO agent orchestrates 6 Sonnet 4.6 board members in adversarial deb
     ├── config-loader.ts      ← Reads + validates config.yaml
     ├── agent-loader.ts       ← Parses agent markdown + front-matter
     ├── brief-parser.ts       ← Validates briefs, extracts sections
-    ├── orchestrator.ts       ← CEO debate loop (HERZSTÜCK)
+    ├── orchestrator.ts       ← CEO debate loop (core)
     ├── conversation.ts       ← Parallel Anthropic API calls + dry-run
     ├── budget-tracker.ts     ← Time/cost/round constraints
     ├── memo-generator.ts     ← Memo + debate log output
     └── expertise-manager.ts  ← Persistent agent memory
-```
 
-```
 ceo-agents/
 ├── config.yaml    # Constraints, board roster, paths
 ├── agents/        # 7 agent system prompts (DE, markdown + front-matter)
@@ -43,42 +49,14 @@ ceo-agents/
 └── expertise/     # Persistent per-agent knowledge
 ```
 
-## Commands
+## Constraints
 
-```bash
-just ceo              # cd ceo-agents && pi → then /begin
-pi                    # Start PI interactive
-pi -c                 # Continue last session
-just briefs           # List available briefs
-just new-brief NAME   # Create brief from template
-just roster           # Show board members
-```
-
-## Constraints (config.yaml)
-
-- **Time**: 2-10 minutes per session
-- **Budget**: $1-$20 per session
+- **Time**: 2-10 minutes per session (config.yaml)
+- **Budget**: $1-$20 per session (config.yaml)
 - **Rounds**: min 2, max 10
 - **Brief validation**: Must have Situation, Stakes, Constraints, Key Questions
 - **Dry Run**: `meeting.dry_run: true` — mock responses, no API costs
-
-## Board Members
-
-| Agent | Role | Zeithorizont |
-|-------|------|-------------|
-| CEO | Orchestrator, final decision | — |
-| Financial Realist | Kosten, Opportunitätskosten, Leistbarkeit | 1-2 Jahre |
-| Career & Skills Advisor | Skill-Aufbau, Karriere-Trajektorie | 3-5 Jahre |
-| Wellbeing Guardian | Gesundheit, Beziehungen, Energie | Gegenwart + langfristig |
-| Compounder | Zinseszins-Effekt, Moats, Flywheels | 5-10 Jahre |
-| Contrarian | Blinde Flecken, Second-Order Effects | Quer zu allen |
-| Moonshot | 10x-Denken, Paradigmenwechsel | Unbegrenzt |
-
-## Dangerous Commands
-
-- Running without budget constraints burns API credits fast
 - Never remove time/budget limits from config.yaml
-- `git reset --hard` destroys expertise files and debate history
 - Never delete `ceo-agents/expertise/` — agents lose accumulated knowledge
 
 ## Coding Conventions
@@ -89,3 +67,107 @@ just roster           # Show board members
 - Briefs: German, required sections enforced by brief-parser
 - All repeatable commands in `justfile`
 - Config paths are relative to `ceo-agents/` (basePath)
+
+---
+
+## Standard Workflow
+
+Follow this workflow for ALL implementation tasks. Each step is mandatory unless explicitly skipped by the user.
+
+### Step 0: Research & Reuse (before writing ANY new code)
+
+Search for existing solutions before building. Use in this order:
+1. `research-mode` → `search-first` — GitHub code search, existing implementations
+2. `docs` / Context7 — Library docs, API behavior
+3. `deep-research` → `exa-search` — Broader web research only if 1+2 insufficient
+4. Check package registries (npm, PyPI, crates.io) — prefer battle-tested libraries
+
+### Step 1: Brainstorm (mandatory before creative work)
+
+1. Invoke `superpowers:brainstorming`
+2. Then `spec-expander` (always AFTER brainstorming)
+3. Optionally `spec-reviewer` for adversarial review
+
+### Step 2: Plan
+
+1. Invoke `superpowers:writing-plans`
+2. Use **planner** agent to create implementation plan with phases, dependencies, risks
+3. Plan goes to `docs/superpowers/plans/`
+
+### Step 3: Implement
+
+1. Invoke `superpowers:executing-plans`
+2. Use `superpowers:subagent-driven-development` for parallel independent tasks
+3. TDD is mandatory: `superpowers:test-driven-development` / `tdd`
+   - RED: Write test first, verify it fails
+   - GREEN: Write minimal implementation to pass
+   - IMPROVE: Refactor, verify 80%+ coverage
+
+### Step 4: Review
+
+1. Invoke `superpowers:requesting-code-review`
+2. Use `typescript-reviewer` for extension code
+3. Use `security-reviewer` when touching auth, API calls, budget logic
+
+### Step 5: Verify
+
+1. Invoke `superpowers:verification-before-completion` + `verify`
+2. Never say "done" without running this step
+
+### Step 6: Git
+
+1. `superpowers:finishing-a-development-branch`
+2. `superpowers:using-git-worktrees` for feature isolation
+3. Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`
+
+## Model-Routing
+
+MANDATORY for any agent spawning. Default: Sonnet. Escalate to Opus only for deep reasoning. Drop to Haiku for mechanical tasks.
+
+| Task | Model | Cost/1M (in/out) |
+|------|-------|-------------------|
+| Classification, extraction, summaries | Haiku 4.5 | $0.80 / $4 |
+| Code generation, reviews, research | Sonnet 4.6 | $3 / $15 |
+| Architecture, synthesis, root-cause | Opus 4.6 | $15 / $75 |
+
+## Design-Routing
+
+MANDATORY for ANY UI/design task:
+
+1. `superpowers:brainstorming` — generate ideas
+2. `design-workflow` — orchestrator
+3. `ui-ux-pro-max` — **WAS**: design decisions, layout, UX
+4. `modern-web-builder` — **WIE**: code patterns
+5. `frontend-patterns` — framework-specific patterns
+
+## Cross-Model Workflow
+
+For complex tasks:
+1. **PLAN** → Claude (Opus) writes plan in `docs/superpowers/plans/`
+2. **QA REVIEW** → Codex reviews plan against real code
+3. **IMPLEMENT** → Claude executes with test gates
+4. **VERIFY** → Codex verifies implementation
+
+## Bei Problemen
+
+| Situation | Skill |
+|-----------|-------|
+| Bug/Fehler | `superpowers:systematic-debugging` |
+| Build bricht | `build-fix` / `build-error-resolver` Agent |
+| Kontext wird voll | `superpowers:strategic-compact` |
+| Loop stalled | `long-term-agent-ops` |
+
+## Agent Orchestration
+
+Use agents proactively without waiting for user prompt:
+
+| Trigger | Agent |
+|---------|-------|
+| Complex feature request | **planner** |
+| Code just written/modified | **code-reviewer** |
+| Bug fix or new feature | **tdd-guide** |
+| Architectural decision | **architect** |
+| Security-sensitive code | **security-reviewer** |
+| Build failure | **build-error-resolver** |
+
+ALWAYS use parallel agent execution for independent operations.

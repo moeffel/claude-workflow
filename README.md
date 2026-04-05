@@ -1,13 +1,93 @@
-# CEO & Board — Multi-Agent Decision System
+# Agent Board — Multi-Agent Decision System + Claude Code Workflow
 
-An **Opus 4.6 CEO** orchestrates **6 Sonnet 4.6 board members** in adversarial debate to produce strategic decision memos. Built on the [PI Agent Harness](https://github.com/badlogic/pi-mono), inspired by [IndyDevDan's agentic architecture](https://agenticengineer.com/).
+Two things in one template:
 
-**Input:** A structured brief (situation, stakes, constraints, key questions).
-**Output:** An actionable decision memo with bias analysis.
+1. **Agent Board** — An Opus 4.6 CEO orchestrates 6 Sonnet 4.6 board members in adversarial debate to produce strategic decision memos. Built on [PI Agent Harness](https://github.com/badlogic/pi-mono).
+2. **Claude Code Workflow** — A portable Standard Workflow (Research → Brainstorm → Plan → TDD → Review → Verify → Git) that works on CLI, Desktop, IDE, and Claude Cloud. Drop `CLAUDE.md` into any repo.
 
 ```
 Brief → CEO reads → Board debates (2-10 rounds) → Memo with recommendations
 ```
+
+---
+
+## Quick Start: Agent Board
+
+### Prerequisites
+
+- [PI Agent Harness](https://github.com/badlogic/pi-mono) v0.62+ (`npm i -g @mariozechner/pi-coding-agent`)
+- [Just](https://github.com/casey/just) task runner (`brew install just`)
+- Node.js v22+
+- Anthropic API key or PI OAuth login (`pi /login`)
+
+### Setup
+
+```bash
+gh repo create my-board --template moeffel/agent-board --clone
+cd my-board
+npm install
+```
+
+### Run
+
+```bash
+just new-brief my-decision    # Create brief from template
+# Edit ceo-agents/briefs/my-decision.md
+just ceo                      # Start session → /begin
+```
+
+### Commands
+
+```bash
+just ceo              # Start CEO & Board session
+just briefs           # List briefs
+just new-brief NAME   # Create brief from template
+just memos            # List decision memos
+just roster           # Show board members
+just expertise        # Show agent memory
+just clean-debates    # Remove debate logs
+```
+
+---
+
+## Quick Start: Claude Code Workflow
+
+Use the Standard Workflow in **any repo** — no Agent Board needed.
+
+### Option A: Setup Script
+
+```bash
+curl -sL https://raw.githubusercontent.com/moeffel/agent-board/main/docs/claude-setup.sh | bash
+```
+
+Auto-detects language/framework. Creates `CLAUDE.md` with full workflow + `.claude/settings.local.json` with open permissions.
+
+### Option B: Copy Template
+
+```bash
+# Copy CLAUDE.md template and fill in project sections
+curl -sO https://raw.githubusercontent.com/moeffel/agent-board/main/docs/CLAUDE.template.md
+mv CLAUDE.template.md CLAUDE.md
+mkdir -p .claude
+curl -sO https://raw.githubusercontent.com/moeffel/agent-board/main/docs/settings.local.template.json
+mv settings.local.template.json .claude/settings.local.json
+```
+
+### What's in the Workflow
+
+| Step | Skills | Purpose |
+|------|--------|---------|
+| **0. Research** | `research-mode` → `search-first` → `docs` → `deep-research` | Find existing solutions before building |
+| **1. Brainstorm** | `superpowers:brainstorming` → `spec-expander` | Mandatory before creative work |
+| **2. Plan** | `superpowers:writing-plans` + **planner** agent | Structured plan with phases |
+| **3. Implement** | `superpowers:executing-plans` + `tdd` | TDD: RED → GREEN → IMPROVE |
+| **4. Review** | `superpowers:requesting-code-review` + language reviewer + `security-reviewer` | Quality + security |
+| **5. Verify** | `superpowers:verification-before-completion` | Never "done" without this |
+| **6. Git** | `superpowers:finishing-a-development-branch` | Conventional commits |
+
+Plus: Model-Routing, Design-Routing, Cross-Model (Claude+Codex), Agent Orchestration, Debugging skills.
+
+---
 
 ## Board Members
 
@@ -21,200 +101,87 @@ Brief → CEO reads → Board debates (2-10 rounds) → Memo with recommendation
 | **Contrarian** | Blind spots, second-order effects | Cross-cutting |
 | **Moonshot** | 10x thinking, paradigm shifts | Unlimited |
 
-All agents have mandatory **cognitive bias checking** built into their system prompts.
+All agents have mandatory **cognitive bias checking**.
 
-## Prerequisites
-
-- [PI Agent Harness](https://github.com/badlogic/pi-mono) v0.62+ (`npm i -g @mariozechner/pi-coding-agent`)
-- [Just](https://github.com/casey/just) task runner (`brew install just`)
-- Node.js v22+
-- An Anthropic API key or PI OAuth login (`pi /login`)
-
-## Quick Start
-
-### 1. Use this template
-
-Click **"Use this template"** on GitHub, or:
-
-```bash
-gh repo create my-board --template moeffel/ceo-board-template --clone
-cd my-board
-npm install
-```
-
-### 2. Configure your board
-
-Edit `ceo-agents/config.yaml` to set budget, time limits, and board roster:
-
-```yaml
-meeting:
-  max_time_minutes: 5
-  max_budget_dollars: 5
-  min_rounds: 2
-  max_rounds: 5
-  dry_run: false          # true = mock responses, no API costs
-```
-
-### 3. Customize agents (optional)
-
-Each board member lives in `ceo-agents/agents/*.md` with:
-- A **system prompt** defining personality, heuristics, and temperament
-- **Front-matter** specifying model, skills, and expertise area
-
-You can modify existing agents or add new ones. Register new agents in `config.yaml`.
-
-### 4. Write a brief
+## Writing a Brief
 
 ```bash
 just new-brief my-decision
-# Edit ceo-agents/briefs/my-decision.md
 ```
 
-A brief needs these sections:
-- **Situation** — What's happening? Facts, names, numbers, dates.
-- **Status Quo** — What are you currently doing?
-- **Stakes** — What's at risk? What if you do nothing?
-- **Constraints** — Time, budget, resources, legal.
-- **Key Questions** — What must the board answer?
+Required sections:
+- **Situation** — Facts, names, numbers, dates
+- **Status Quo** — What you're currently doing
+- **Stakes** — What's at risk, what if you do nothing
+- **Constraints** — Time, budget, resources, legal
+- **Key Questions** — What the board must answer
 
-### 5. Run a session
+## How the Debate Works
 
-```bash
-just ceo
-# Inside PI:
-/begin
+```
+1. CEO reads brief + config
+2. CEO poses opening question
+3. Board members respond IN PARALLEL (Sonnet 4.6)
+4. CEO synthesizes, identifies disagreements
+5. Follow-up round focusing on conflicts
+6. Repeat until consensus OR limit reached
+7. CEO writes memo: recommendation, dissent, risks, bias check, actions
 ```
 
-The CEO reads your brief, dispatches it to the board, and runs adversarial debate rounds until consensus or the round limit is reached. Output lands in `ceo-agents/memos/`.
+**Budget controls**: Time (2-10 min), cost ($1-$20), rounds (2-10). All configurable in `config.yaml`.
 
-## Commands
+**Dry run**: `meeting.dry_run: true` — mock responses, no API costs.
 
-```bash
-just ceo              # Start CEO & Board session (cd ceo-agents && pi)
-just briefs           # List available briefs
-just new-brief NAME   # Create brief from template
-just memos            # List generated memos
-just roster           # Show board members
-just expertise        # Show agent expertise/memory
-just clean-debates    # Remove debate artifacts (keeps memos)
-```
+## Customization
+
+### Add a board member
+
+1. Create `ceo-agents/agents/my-agent.md` with front-matter (`model`, `skills`, `expertise`)
+2. Write system prompt (see existing agents for structure)
+3. Register in `config.yaml`
+4. Create empty `ceo-agents/expertise/my-agent.md`
+
+### Modify the debate
+
+Edit `.pi/extensions/lib/orchestrator.ts` — parallel calls, synthesis strategy, consensus detection, escalation.
 
 ## Project Structure
 
 ```
-.
-├── CLAUDE.md                     # Claude Code project instructions
-├── justfile                      # Task runner commands
-├── package.json                  # Dependencies (@anthropic-ai/sdk, yaml)
-│
-├── .pi/extensions/               # PI Agent Harness extension
-│   ├── ceo-board.ts              # Entry point: /begin command
-│   └── lib/
-│       ├── types.ts              # Shared interfaces
-│       ├── config-loader.ts      # Reads + validates config.yaml
-│       ├── agent-loader.ts       # Parses agent markdown
-│       ├── brief-parser.ts       # Validates briefs
-│       ├── orchestrator.ts       # CEO debate loop (core)
-│       ├── conversation.ts       # Parallel Anthropic API calls
-│       ├── budget-tracker.ts     # Time/cost/round constraints
-│       ├── memo-generator.ts     # Decision memo output
-│       └── expertise-manager.ts  # Persistent agent memory
-│
-├── ceo-agents/
-│   ├── config.yaml               # Board roster, constraints, paths
-│   ├── agents/                   # 7 agent system prompts (markdown)
-│   ├── briefs/                   # Input: decision briefs
-│   │   └── _template.md          # Brief template
-│   ├── expertise/                # Persistent per-agent knowledge
-│   ├── debates/                  # Session logs (auto-generated)
-│   └── memos/                    # Output: decision memos
-│
-├── .claude/                      # Claude Code configuration
-│   ├── settings.local.json       # Project permissions
-│   ├── hooks/                    # Brief validation, budget guard
-│   ├── agents/                   # Claude Code sub-agents
-│   └── skills/                   # Domain-specific skills
-│
+├── CLAUDE.md                     # Project instructions + Standard Workflow
+├── justfile                      # Task runner
+├── package.json                  # Dependencies
+├── .pi/extensions/               # PI extension (debate engine)
+│   ├── ceo-board.ts              # Entry: /begin command
+│   └── lib/                      # 11 TypeScript modules
+├── ceo-agents/                   # Board configuration + data
+│   ├── config.yaml               # Constraints, roster
+│   ├── agents/                   # 7 agent prompts
+│   ├── briefs/_template.md       # Brief template
+│   ├── expertise/                # Persistent agent memory
+│   ├── debates/                  # Session logs
+│   └── memos/                    # Decision output
+├── .claude/                      # Claude Code config
+│   ├── settings.local.json       # Open permissions
+│   ├── hooks/                    # Brief validator, budget guard
+│   ├── agents/                   # Sub-agents
+│   └── skills/                   # 5 domain skills
 └── docs/
-    ├── claude-config-template.md # Claude Code setup guide
+    ├── CLAUDE.template.md        # Universal CLAUDE.md template
+    ├── claude-setup.sh           # Auto-setup script for any repo
+    ├── settings.local.template.json
+    ├── claude-config-template.md # Config guide
     └── pi-guide.md               # PI harness reference
 ```
-
-## How It Works
-
-### Debate Loop
-
-```
-1. CEO reads brief + config
-2. CEO formulates opening question for the board
-3. All board members respond IN PARALLEL (Sonnet 4.6)
-4. CEO synthesizes, identifies disagreements
-5. CEO poses follow-up focusing on conflicts
-6. Board responds again (round 2+)
-7. Repeat until consensus OR round/budget/time limit
-8. CEO writes decision memo with:
-   - Recommendation
-   - Dissenting opinions
-   - Risk analysis
-   - Bias check
-   - Action items
-```
-
-### Budget Controls
-
-Every session enforces:
-- **Time limit**: 2-10 minutes (configurable)
-- **Cost limit**: $1-$20 per session (configurable)
-- **Round limit**: min 2, max 10
-
-The `budget-tracker` monitors token usage per API call and stops the debate if limits are hit.
-
-### Dry Run Mode
-
-Set `meeting.dry_run: true` in `config.yaml` to test with mock responses (no API costs). Useful for debugging prompts and flow.
-
-## Customization
-
-### Add a new board member
-
-1. Create `ceo-agents/agents/my-agent.md` with front-matter:
-   ```yaml
-   ---
-   model: claude-sonnet-4-6
-   skills: [domain-expertise]
-   expertise: my-expertise-area
-   ---
-   ```
-2. Write the system prompt (see existing agents for structure)
-3. Add the agent to `config.yaml` board roster
-4. Create `ceo-agents/expertise/my-agent.md` (empty, will accumulate knowledge)
-
-### Modify the debate flow
-
-The orchestrator lives in `.pi/extensions/lib/orchestrator.ts`. Key customization points:
-- Number of parallel calls per round
-- Synthesis strategy
-- Consensus detection
-- Escalation rules
-
-## Claude Code Integration
-
-This repo includes a full **Claude Code configuration** with:
-- **CLAUDE.md** — Project architecture, commands, constraints, and a portable **Standard Workflow** (works on Claude Cloud too)
-- **Skills** — Brief writing, board orchestration, agent personality design
-- **Hooks** — Brief validation on write, budget guard on agent spawn
-- **Sub-agents** — Brief analyst, memo reviewer, board member creator
-
-See [`docs/claude-config-template.md`](docs/claude-config-template.md) for how to use this config pattern in your own repos.
 
 ## Dangerous Operations
 
 | Action | Risk |
 |--------|------|
 | Running without budget limits | Burns API credits fast |
-| `git reset --hard` | Destroys expertise files and debate history |
+| `git reset --hard` | Destroys expertise + debate history |
 | Deleting `ceo-agents/expertise/` | Agents lose accumulated knowledge |
-| Setting `dry_run: false` with high round limits | Expensive sessions |
+| `dry_run: false` + high round limits | Expensive sessions |
 
 ## License
 
