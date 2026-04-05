@@ -1,190 +1,174 @@
 #!/bin/bash
-# Claude Code — Repo Setup Script
-# Erstellt CLAUDE.md + .claude/ Config mit vollem Standard-Workflow.
+# Claude Code — Repo Setup
+# Erstellt CLAUDE.md mit Standard-Workflow + offene Permissions.
 # Funktioniert auf CLI, Desktop, IDE UND Claude Cloud.
 #
 # Usage:
 #   curl -sL https://raw.githubusercontent.com/moeffel/ceo-board-template/main/docs/claude-setup.sh | bash
-#   # oder lokal:
-#   bash docs/claude-setup.sh
 
 set -e
 
 echo "╔══════════════════════════════════════════════╗"
-echo "║  Claude Code — Repo Config Setup             ║"
+echo "║  Claude Code — Repo Setup                    ║"
 echo "╚══════════════════════════════════════════════╝"
 
-# Check if CLAUDE.md already exists
-if [ -f "CLAUDE.md" ]; then
-    echo "⚠  CLAUDE.md exists. Backing up to CLAUDE.md.bak"
-    cp CLAUDE.md CLAUDE.md.bak
-fi
+[ -f "CLAUDE.md" ] && cp CLAUDE.md CLAUDE.md.bak && echo "⚠  CLAUDE.md backed up"
 
-# Create .claude directory structure
 mkdir -p .claude/{skills,hooks,agents}
 
-# Create settings.local.json if not exists
+# --- Permissions: alles offen, nur Katastrophen geblockt ---
 if [ ! -f ".claude/settings.local.json" ]; then
-cat > .claude/settings.local.json << 'SETTINGS'
+cat > .claude/settings.local.json << 'EOF'
 {
   "permissions": {
     "allow": [
+      "Read",
+      "Edit",
+      "MultiEdit",
+      "Write",
+      "Bash(*)",
       "WebSearch",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(git *)",
-      "Bash(npm *)",
-      "Bash(npx *)",
-      "Bash(node *)",
-      "Bash(just *)",
-      "Bash(curl *)",
-      "Bash(chmod *)",
-      "Bash(mkdir *)",
-      "Bash(ls *)",
+      "WebFetch",
       "mcp__playwright__*"
     ],
     "deny": [
       "Bash(rm -rf /)",
-      "Bash(sudo *)"
+      "Bash(rm -rf ~)",
+      "Bash(sudo rm -rf *)"
     ]
   }
 }
-SETTINGS
-echo "✓  .claude/settings.local.json created"
+EOF
+echo "✓  .claude/settings.local.json (open permissions)"
 else
-    echo "→  .claude/settings.local.json already exists, skipping"
+    echo "→  .claude/settings.local.json exists, skipping"
 fi
 
-# Detect project type
+# --- Auto-detect ---
 LANG=""
-if [ -f "package.json" ]; then
-    LANG="TypeScript/JavaScript"
-elif [ -f "pyproject.toml" ] || [ -f "requirements.txt" ] || [ -f "setup.py" ]; then
-    LANG="Python"
-elif [ -f "go.mod" ]; then
-    LANG="Go"
-elif [ -f "Cargo.toml" ]; then
-    LANG="Rust"
-elif [ -f "composer.json" ]; then
-    LANG="PHP"
-else
-    LANG="[TODO: set language]"
-fi
+[ -f "package.json" ] && LANG="TypeScript/JavaScript"
+[ -f "pyproject.toml" ] || [ -f "requirements.txt" ] && LANG="${LANG:-Python}"
+[ -f "go.mod" ] && LANG="Go"
+[ -f "Cargo.toml" ] && LANG="Rust"
+[ -f "composer.json" ] && LANG="PHP"
+LANG="${LANG:-unknown}"
 
-# Detect framework
-FRAMEWORK=""
-if [ -f "next.config.js" ] || [ -f "next.config.ts" ] || [ -f "next.config.mjs" ]; then
-    FRAMEWORK="Next.js"
-elif [ -f "vite.config.ts" ] || [ -f "vite.config.js" ]; then
-    FRAMEWORK="Vite"
-elif grep -q "fastapi" requirements.txt 2>/dev/null || grep -q "fastapi" pyproject.toml 2>/dev/null; then
-    FRAMEWORK="FastAPI"
-elif grep -q "django" requirements.txt 2>/dev/null || grep -q "django" pyproject.toml 2>/dev/null; then
-    FRAMEWORK="Django"
-elif grep -q "express" package.json 2>/dev/null; then
-    FRAMEWORK="Express"
-fi
-[ -z "$FRAMEWORK" ] && FRAMEWORK="[TODO: set framework]"
+FW=""
+[ -f "next.config.js" ] || [ -f "next.config.ts" ] || [ -f "next.config.mjs" ] && FW="Next.js"
+[ -f "vite.config.ts" ] || [ -f "vite.config.js" ] && FW="${FW:-Vite}"
+grep -q "fastapi" requirements.txt 2>/dev/null && FW="${FW:-FastAPI}"
+grep -q "django" requirements.txt 2>/dev/null && FW="${FW:-Django}"
+grep -q "express" package.json 2>/dev/null && FW="${FW:-Express}"
 
-# Get project name from directory
-PROJECT_NAME=$(basename "$(pwd)")
+PROJECT=$(basename "$(pwd)")
 
 cat > CLAUDE.md << CLAUDEMD
-# ${PROJECT_NAME}
-
-[TODO: 1-2 Sätze — Was macht dieses Projekt?]
+# ${PROJECT}
 
 ## Tech Stack
 
 - **Language**: ${LANG}
-- **Framework**: ${FRAMEWORK}
-- **Database**: [TODO: PostgreSQL / SQLite / ...]
-- **Task Runner**: [TODO: just / npm scripts / make]
+- **Framework**: ${FW:-TBD}
 
 ## Development
 
 \`\`\`bash
-# Start development
-[TODO: ./scripts/dev.sh / npm run dev / just dev]
+# Add dev commands
 \`\`\`
 
 ## Testing
 
 \`\`\`bash
-# [TODO: Add test commands]
+# Add test commands
 \`\`\`
 
 ## Architecture
 
-[TODO: Key directories and their purpose]
-
-## Constraints
-
-- [TODO: What to NEVER do]
-- [TODO: Required env vars]
-
-## Coding Conventions
-
-- [TODO: Language of comments/docs (DE/EN)]
-- [TODO: File naming patterns]
+Add key directories and their purpose.
 
 ---
 
-## Skill-Workflow-Map
+## Standard Workflow
 
-> Portabler Standard-Workflow — funktioniert auf CLI, Desktop, IDE UND Claude Cloud.
+Follow this workflow for ALL implementation tasks. Each step is mandatory unless explicitly skipped by the user.
 
-### Standard Development Workflow
+### Step 0: Research & Reuse (before writing ANY new code)
 
-| Step | Skills (in Reihenfolge) | Zweck |
-|------|------------------------|-------|
-| **0. Research** | \`research-mode\` → \`search-first\` → \`docs\`/Context7 → \`deep-research\` → \`exa-search\` | Bestehende Lösungen/Docs suchen vor Neubau |
-| **1. Brainstorm** | \`superpowers:brainstorming\` → \`spec-expander\` → \`spec-reviewer\` *(optional)* | Pflicht vor kreativer Arbeit. Spec-Expander immer NACH brainstorming |
-| **2. Plan** | \`superpowers:writing-plans\` + \`planner\` Agent | Strukturierter Plan, Phasen, Risiken |
-| **3. Implement** | \`superpowers:executing-plans\` + \`superpowers:subagent-driven-development\` + \`superpowers:test-driven-development\` / \`tdd\` | Plan abarbeiten, TDD: RED → GREEN → IMPROVE |
-| **4. Review** | \`superpowers:requesting-code-review\` + \`python-reviewer\` / \`typescript-reviewer\` + \`security-reviewer\` | Sprach-spezifisch + Security bei Auth/Input/DB |
-| **5. Verify** | \`superpowers:verification-before-completion\` + \`verify\` | Bevor "fertig" gesagt wird |
-| **6. Git** | \`superpowers:finishing-a-development-branch\` + \`superpowers:using-git-worktrees\` | Branch abschließen, Feature-Isolation |
+Search for existing solutions before building. Use in this order:
+1. \`research-mode\` → \`search-first\` — GitHub code search, existing implementations
+2. \`docs\` / Context7 — Library docs, API behavior
+3. \`deep-research\` → \`exa-search\` — Broader web research only if 1+2 insufficient
+4. Check package registries (npm, PyPI, crates.io) — prefer battle-tested libraries
 
-### Model-Routing (MANDATORY)
+### Step 1: Brainstorm (mandatory before creative work)
+
+1. Invoke \`superpowers:brainstorming\`
+2. Then \`spec-expander\` (always AFTER brainstorming)
+3. Optionally \`spec-reviewer\` for adversarial review
+
+### Step 2: Plan
+
+1. Invoke \`superpowers:writing-plans\`
+2. Use **planner** agent to create implementation plan with phases, dependencies, risks
+3. Plan goes to \`docs/superpowers/plans/\`
+
+### Step 3: Implement
+
+1. Invoke \`superpowers:executing-plans\`
+2. Use \`superpowers:subagent-driven-development\` for parallel independent tasks
+3. TDD is mandatory: \`superpowers:test-driven-development\` / \`tdd\`
+   - RED: Write test first, verify it fails
+   - GREEN: Write minimal implementation to pass
+   - IMPROVE: Refactor, verify 80%+ coverage
+
+### Step 4: Review
+
+1. Invoke \`superpowers:requesting-code-review\`
+2. Use language-specific reviewer: \`python-reviewer\` / \`typescript-reviewer\` / \`go-reviewer\` / \`rust-reviewer\`
+3. Use \`security-reviewer\` when touching auth, user input, DB queries, API endpoints, crypto, payments
+
+### Step 5: Verify
+
+1. Invoke \`superpowers:verification-before-completion\` + \`verify\`
+2. Never say "done" without running this step
+
+### Step 6: Git
+
+1. \`superpowers:finishing-a-development-branch\`
+2. \`superpowers:using-git-worktrees\` for feature isolation
+3. Conventional commits: \`feat:\`, \`fix:\`, \`refactor:\`, \`docs:\`, \`test:\`, \`chore:\`
+
+---
+
+## Model-Routing
+
+MANDATORY for any agent spawning. Default: Sonnet. Escalate to Opus only for deep reasoning. Drop to Haiku for mechanical tasks.
 
 | Task | Model | Cost/1M (in/out) |
 |------|-------|-------------------|
-| Classification, extraction, summaries | Haiku 4.5 | \$0.80 / \$4 |
-| Code generation, reviews, research | Sonnet 4.6 | \$3 / \$15 |
-| Architecture, synthesis, root-cause | Opus 4.6 | \$15 / \$75 |
+| Classification, extraction, summaries | Haiku 4.5 | \\$0.80 / \\$4 |
+| Code generation, reviews, research | Sonnet 4.6 | \\$3 / \\$15 |
+| Architecture, synthesis, root-cause | Opus 4.6 | \\$15 / \\$75 |
 
-### Design-Routing (bei UI-Aufgaben)
+## Design-Routing
 
-| # | Skill | Rolle |
-|---|-------|-------|
-| 1 | \`superpowers:brainstorming\` | Ideen generieren |
-| 2 | \`design-workflow\` | Orchestrator |
-| 3 | \`ui-ux-pro-max\` | **WAS** — Design-Entscheidungen, Layout, UX |
-| 4 | \`modern-web-builder\` | **WIE** — Code-Patterns (Tailwind, Animations, Charts) |
-| 5 | \`frontend-patterns\` | React/Framework Patterns |
+MANDATORY for ANY UI/design task:
 
-### Cross-Model Workflow (komplexe Tasks)
+1. \`superpowers:brainstorming\` — generate ideas
+2. \`design-workflow\` — orchestrator
+3. \`ui-ux-pro-max\` — **WAS**: design decisions, layout, UX
+4. \`modern-web-builder\` — **WIE**: code patterns
+5. \`frontend-patterns\` — framework-specific patterns
 
-| Phase | Skill | Wer |
-|-------|-------|-----|
-| 1. Plan | \`cross-model\` | Claude (Opus) |
-| 2. QA Review | \`harness-patterns\` | Codex reviewt Plan |
-| 3. Implement | \`superpowers:executing-plans\` | Claude |
-| 4. Verify | \`cross-model\` | Codex verifiziert |
+## Cross-Model Workflow
 
-### Workflow Orchestration
+For complex tasks:
+1. **PLAN** → Claude (Opus) writes plan
+2. **QA REVIEW** → Codex reviews plan
+3. **IMPLEMENT** → Claude executes with test gates
+4. **VERIFY** → Codex verifies implementation
 
-| Situation | Pattern |
-|-----------|---------|
-| Single focused change | Sequential Pipeline (\`claude -p\`) |
-| Interactive exploration | NanoClaw REPL (\`/claw\`) |
-| Multi-day iterative + CI | Continuous Claude PR Loop |
-| Parallel from specs | RFC-DAG (Ralphinho) with worktrees |
-| Many creative variations | Infinite Agentic Loop |
-| Post-implementation cleanup | De-Sloppify Pass (separate context) |
-
-### Bei Problemen
+## Bei Problemen
 
 | Situation | Skill |
 |-----------|-------|
@@ -193,16 +177,17 @@ cat > CLAUDE.md << CLAUDEMD
 | Kontext wird voll | \`superpowers:strategic-compact\` |
 | Loop stalled | \`long-term-agent-ops\` |
 
-### Coding Standards
+## Coding Standards
 
-- **Immutability**: ALWAYS create new objects, NEVER mutate existing ones
-- **File Organization**: Many small files > few large files (200-400 lines, max 800)
-- **Error Handling**: Handle errors explicitly at every level, never silently swallow
-- **Input Validation**: Validate at system boundaries, fail fast with clear messages
-- **Functions**: < 50 lines, no deep nesting (> 4 levels)
-- **Security**: No hardcoded secrets, parameterized queries, sanitized HTML, CSRF protection
+- **Immutability**: ALWAYS create new objects, NEVER mutate
+- **Small files**: 200-400 lines, max 800. Functions < 50 lines
+- **Error Handling**: Explicit at every level, never swallow
+- **Input Validation**: Validate at boundaries, fail fast
+- **Security**: No hardcoded secrets, parameterized queries, sanitized HTML
 
-### Agent Orchestration
+## Agent Orchestration
+
+Use agents proactively without waiting for user prompt:
 
 | Trigger | Agent |
 |---------|-------|
@@ -213,19 +198,10 @@ cat > CLAUDE.md << CLAUDEMD
 | Security-sensitive code | **security-reviewer** |
 | Build failure | **build-error-resolver** |
 
-ALWAYS use **parallel** agent execution for independent operations.
+ALWAYS use parallel agent execution for independent operations.
 CLAUDEMD
 
-echo "✓  CLAUDE.md created (with Standard Workflow)"
+echo "✓  CLAUDE.md created (Standard Workflow active)"
 echo ""
-echo "╔══════════════════════════════════════════════╗"
-echo "║  Done! Next steps:                           ║"
-echo "║                                              ║"
-echo "║  1. Edit CLAUDE.md — fill in [TODO] sections ║"
-echo "║  2. Edit .claude/settings.local.json         ║"
-echo "║     — add project-specific permissions       ║"
-echo "║  3. Optional: add .claude/skills/            ║"
-echo "║     — domain-specific knowledge              ║"
-echo "║  4. Optional: add .claude/hooks/             ║"
-echo "║     — project-specific validation            ║"
-echo "╚══════════════════════════════════════════════╝"
+echo "Done. Fill in Tech Stack, Dev/Test commands, and Architecture."
+echo "The workflow works immediately — no further config needed."

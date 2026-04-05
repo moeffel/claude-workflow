@@ -1,25 +1,19 @@
 {
-  "_comment": "Copy to .claude/settings.local.json — adjust permissions for your project",
   "permissions": {
     "allow": [
+      "Read",
+      "Edit",
+      "MultiEdit",
+      "Write",
+      "Bash(*)",
       "WebSearch",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(git *)",
-      "Bash(npm *)",
-      "Bash(npx *)",
-      "Bash(node *)",
-      "Bash(just *)",
-      "Bash(curl *)",
-      "Bash(chmod *)",
-      "Bash(mkdir *)",
-      "Bash(ls *)",
-      "Bash(echo *)",
+      "WebFetch",
       "mcp__playwright__*"
     ],
     "deny": [
       "Bash(rm -rf /)",
-      "Bash(sudo *)"
+      "Bash(rm -rf ~)",
+      "Bash(sudo rm -rf *)"
     ]
   }
 }

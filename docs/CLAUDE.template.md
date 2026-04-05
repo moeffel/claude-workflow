@@ -1,147 +1,91 @@
 # PROJECT_NAME
 
-> **Anleitung:** Kopiere diese Datei als `CLAUDE.md` ins Root deines Repos.
-> Ersetze alle `PROJECT_NAME` und `[PLACEHOLDER]` Abschnitte.
-> Lösche diesen Anleitung-Block danach.
-
-## Project Overview
-
-[1-2 Sätze: Was macht dieses Projekt?]
-
-**Domain reference:** `[Spec.md / docs/spec.md]` is the source of truth for [domain-specific rules]. Always consult it before implementing or changing business logic.
+One-line description.
 
 ## Tech Stack
 
-- **Language**: [TypeScript / Python / Go / Rust / ...]
-- **Framework**: [Next.js / FastAPI / Express / ...]
-- **Database**: [PostgreSQL / SQLite / ...]
-- **Task Runner**: [just / npm scripts / make]
-- **Node**: [version]
+- **Language**:
+- **Framework**:
+- **Database**:
+- **Task Runner**:
 
 ## Development
 
 ```bash
-# Start development
-[./scripts/dev.sh / npm run dev / just dev]
-
-# Reset/seed database (if applicable)
-[./scripts/dev.sh --reset-db]
+# dev commands here
 ```
 
 ## Testing
 
 ```bash
-# Backend
-[cd backend && pytest]
-[pytest tests/test_file.py -v]
-
-# Frontend
-[cd frontend && npm test]
-[npm run lint]
-[npm run build]
-```
-
-**Test infrastructure:**
-- [Test DB strategy: in-memory SQLite / test containers / ...]
-- [Auth in tests: how to authenticate in test requests]
-- [Key fixtures: what's available]
-
-## Database Migrations
-
-```bash
-[alembic upgrade head / prisma migrate dev / ...]
-[alembic revision --autogenerate -m "description"]
+# test commands here
 ```
 
 ## Architecture
 
-### Backend
-
-- `backend/main.py` — [Entry point, router registration]
-- `backend/models/` — [ORM models]
-- `backend/routers/` — [Route modules]
-- `backend/services/` — [Business logic]
-
-**Key patterns:**
-- [Async/sync, auth strategy, DI pattern, ...]
-
-### Frontend
-
-- `frontend/src/App.tsx` — [Router, layout]
-- `frontend/src/pages/` — [Page components]
-- `frontend/src/components/` — [Shared UI]
-- `frontend/src/hooks/` — [Custom hooks]
-- `frontend/src/types/` — [TypeScript interfaces]
-
-**Key patterns:**
-- [State management: React Query / Zustand / ...]
-- [UI toolkit: Tailwind / shadcn / ...]
-- [Path alias: @/* → src/*]
-
-### [Domain Model (if applicable)]
-
-```
-[Status flow, entity relationships, core domain concepts]
-```
-
-### Roles & Access
-
-[Role hierarchy, permission model]
-
-## Project-Specific Notes
-
-### Before implementing business logic
-[Where to find domain rules — spec file, config, etc.]
-
-### Security model
-- [Auth strategy: session cookies / JWT / ...]
-- [CSRF, rate limiting, password hashing]
-- [Role enforcement pattern]
-
-### Design system
-- [Brand color(s) with hex codes]
-- [Icon library]
-- [Custom animations/tokens]
-
-### Large files — read targeted sections
-- [List files > 500 lines with guidance on how to navigate them]
+Describe key directories.
 
 ## Constraints
 
-- [What to NEVER do]
-- [Budget/time/resource limits]
-- [Required env vars]
-
-## Dangerous Operations
-
-| Action | Risk |
-|--------|------|
-| [destructive command] | [what gets lost] |
-| [another dangerous op] | [consequence] |
+- List what to never do.
 
 ---
 
-## Skill-Workflow-Map
+## Standard Workflow
 
-> Dieser Abschnitt macht den Standard-Workflow portabel —
-> funktioniert auf CLI, Desktop, IDE UND Claude Cloud.
+Follow this workflow for ALL implementation tasks. Each step is mandatory unless explicitly skipped by the user.
 
-### Standard Development Workflow
+### Step 0: Research & Reuse (before writing ANY new code)
 
-| Step | Skills (in Reihenfolge) | Zweck |
-|------|------------------------|-------|
-| **0. Research** | `research-mode` → `search-first` → `docs`/Context7 → `deep-research` → `exa-search` | Bestehende Lösungen/Docs suchen vor Neubau |
-| **1. Brainstorm** | `superpowers:brainstorming` → `spec-expander` → `spec-reviewer` *(optional)* | Pflicht vor kreativer Arbeit. Spec-Expander immer NACH brainstorming |
-| **2. Plan** | `superpowers:writing-plans` + `planner` Agent | Strukturierter Plan, Phasen, Risiken |
-| **3. Implement** | `superpowers:executing-plans` + `superpowers:subagent-driven-development` + `superpowers:test-driven-development` / `tdd` | Plan abarbeiten, TDD: RED → GREEN → IMPROVE |
-| **4. Review** | `superpowers:requesting-code-review` + `python-reviewer` / `typescript-reviewer` + `security-reviewer` | Sprach-spezifisch + Security bei Auth/Input/DB |
-| **5. Verify** | `superpowers:verification-before-completion` + `verify` | Bevor "fertig" gesagt wird |
-| **6. Git** | `superpowers:finishing-a-development-branch` + `superpowers:using-git-worktrees` | Branch abschließen, Feature-Isolation |
+Search for existing solutions before building. Use in this order:
+1. `research-mode` → `search-first` — GitHub code search, existing implementations
+2. `docs` / Context7 — Library docs, API behavior
+3. `deep-research` → `exa-search` — Broader web research only if 1+2 insufficient
+4. Check package registries (npm, PyPI, crates.io) — prefer battle-tested libraries
 
-### Model-Routing (MANDATORY)
+### Step 1: Brainstorm (mandatory before creative work)
 
-**For ANY agent spawning or multi-model task:**
-→ Default: Sonnet. Escalate to Opus only for deep reasoning. Drop to Haiku for mechanical tasks.
+1. Invoke `superpowers:brainstorming`
+2. Then `spec-expander` (always AFTER brainstorming)
+3. Optionally `spec-reviewer` for adversarial review
+
+### Step 2: Plan
+
+1. Invoke `superpowers:writing-plans`
+2. Use **planner** agent to create implementation plan with phases, dependencies, risks
+3. Plan goes to `docs/superpowers/plans/`
+
+### Step 3: Implement
+
+1. Invoke `superpowers:executing-plans`
+2. Use `superpowers:subagent-driven-development` for parallel independent tasks
+3. TDD is mandatory: `superpowers:test-driven-development` / `tdd`
+   - RED: Write test first, verify it fails
+   - GREEN: Write minimal implementation to pass
+   - IMPROVE: Refactor, verify 80%+ coverage
+
+### Step 4: Review
+
+1. Invoke `superpowers:requesting-code-review`
+2. Use language-specific reviewer: `python-reviewer` / `typescript-reviewer` / `go-reviewer` / `rust-reviewer`
+3. Use `security-reviewer` when touching auth, user input, DB queries, API endpoints, crypto, payments
+
+### Step 5: Verify
+
+1. Invoke `superpowers:verification-before-completion` + `verify`
+2. Never say "done" without running this step
+
+### Step 6: Git
+
+1. `superpowers:finishing-a-development-branch`
+2. `superpowers:using-git-worktrees` for feature isolation
+3. Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`
+
+---
+
+## Model-Routing
+
+MANDATORY for any agent spawning. Default: Sonnet. Escalate to Opus only for deep reasoning. Drop to Haiku for mechanical tasks.
 
 | Task | Model | Cost/1M (in/out) |
 |------|-------|-------------------|
@@ -149,26 +93,28 @@
 | Code generation, reviews, research | Sonnet 4.6 | $3 / $15 |
 | Architecture, synthesis, root-cause | Opus 4.6 | $15 / $75 |
 
-### Design-Routing (bei UI-Aufgaben)
+## Design-Routing
 
-| # | Skill | Rolle |
-|---|-------|-------|
-| 1 | `superpowers:brainstorming` | Ideen generieren |
-| 2 | `design-workflow` | Orchestrator |
-| 3 | `ui-ux-pro-max` | **WAS** — Design-Entscheidungen, Layout, UX |
-| 4 | `modern-web-builder` | **WIE** — Code-Patterns (Tailwind, Animations, Charts) |
-| 5 | `frontend-patterns` | React/Framework Patterns |
+MANDATORY for ANY UI/design task (components, pages, styling, colors, typography, charts, layouts):
 
-### Cross-Model Workflow (komplexe Tasks)
+1. `superpowers:brainstorming` — generate ideas
+2. `design-workflow` — orchestrator
+3. `ui-ux-pro-max` — **WAS**: design decisions, layout, UX
+4. `modern-web-builder` — **WIE**: code patterns (Tailwind, animations, charts)
+5. `frontend-patterns` — framework-specific patterns
 
-| Phase | Skill | Wer |
-|-------|-------|-----|
-| 1. Plan | `cross-model` | Claude (Opus) |
-| 2. QA Review | `harness-patterns` | Codex reviewt Plan |
-| 3. Implement | `superpowers:executing-plans` | Claude |
-| 4. Verify | `cross-model` | Codex verifiziert |
+## Cross-Model Workflow
 
-### Workflow Orchestration
+For complex implementation tasks, use the 4-step pattern:
+
+1. **PLAN** → Claude (Opus) writes plan in `docs/superpowers/plans/`
+2. **QA REVIEW** → Codex reviews plan against real code
+3. **IMPLEMENT** → Claude executes phase-by-phase with test gates
+4. **VERIFY** → Codex verifies implementation against plan
+
+Invoke `cross-model` skill for handoff protocols.
+
+## Workflow Orchestration
 
 | Situation | Pattern |
 |-----------|---------|
@@ -179,7 +125,7 @@
 | Many creative variations | Infinite Agentic Loop |
 | Post-implementation cleanup | De-Sloppify Pass (separate context) |
 
-### Bei Problemen
+## Bei Problemen
 
 | Situation | Skill |
 |-----------|-------|
@@ -188,18 +134,18 @@
 | Kontext wird voll | `superpowers:strategic-compact` |
 | Loop stalled | `long-term-agent-ops` |
 
-### Coding Standards
+## Coding Standards
 
 - **Immutability**: ALWAYS create new objects, NEVER mutate existing ones
-- **File Organization**: Many small files > few large files (200-400 lines typical, 800 max)
+- **File Organization**: Many small files > few large files (200-400 lines, max 800)
 - **Error Handling**: Handle errors explicitly at every level, never silently swallow
 - **Input Validation**: Validate at system boundaries, fail fast with clear messages
 - **Functions**: < 50 lines, no deep nesting (> 4 levels)
 - **Security**: No hardcoded secrets, parameterized queries, sanitized HTML, CSRF protection
 
-### Agent Orchestration
+## Agent Orchestration
 
-Use agents proactively — no user prompt needed:
+Use agents proactively without waiting for user prompt:
 
 | Trigger | Agent |
 |---------|-------|
@@ -210,10 +156,4 @@ Use agents proactively — no user prompt needed:
 | Security-sensitive code | **security-reviewer** |
 | Build failure | **build-error-resolver** |
 
-ALWAYS use **parallel** agent execution for independent operations.
-
-## Deployment
-
-```bash
-[docker compose up / vercel deploy / ...]
-```
+ALWAYS use parallel agent execution for independent operations.
