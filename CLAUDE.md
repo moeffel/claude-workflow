@@ -1,72 +1,19 @@
-# CEO & Board — Multi-Agent Decision System
+# claude-workflow
 
-A CEO agent (Opus 4.6) orchestrates 6 board members (Sonnet 4.6) in adversarial debate. Built on the PI Agent Harness. Input: structured briefs. Output: decision memos with bias analysis.
+Template repo for the Claude Code Standard Workflow. Drop into any project.
 
 ## Tech Stack
 
-- **Runtime**: PI Agent Harness v0.62.0 (`@mariozechner/pi-coding-agent`)
-- **Language**: TypeScript (modular PI extension)
-- **LLM API**: `@anthropic-ai/sdk` (direct API calls for parallel board responses)
-- **Config Parsing**: `yaml` (npm)
-- **Task Runner**: [Just](https://github.com/casey/just) (`j ceo`)
-- **Models**: Opus 4.6 (CEO), Sonnet 4.6 (Board Members)
-- **Node**: v22+
+- **Type**: Configuration template (no runtime code)
+- **Target**: Any Claude Code project (CLI, Desktop, IDE, Cloud)
 
-## Commands
+## What This Contains
 
-```bash
-just ceo              # Start CEO & Board session
-just briefs           # List available briefs
-just new-brief NAME   # Create brief from template
-just memos            # List generated memos
-just roster           # Show board members
-just expertise        # Show agent expertise/memory
-just clean-debates    # Remove debate artifacts
-```
-
-## Architecture
-
-```
-.pi/extensions/
-├── ceo-board.ts              ← Entry point: /begin command
-└── lib/
-    ├── types.ts              ← Shared interfaces
-    ├── config-loader.ts      ← Reads + validates config.yaml
-    ├── agent-loader.ts       ← Parses agent markdown + front-matter
-    ├── brief-parser.ts       ← Validates briefs, extracts sections
-    ├── orchestrator.ts       ← CEO debate loop (core)
-    ├── conversation.ts       ← Parallel Anthropic API calls + dry-run
-    ├── budget-tracker.ts     ← Time/cost/round constraints
-    ├── memo-generator.ts     ← Memo + debate log output
-    └── expertise-manager.ts  ← Persistent agent memory
-
-ceo-agents/
-├── config.yaml    # Constraints, board roster, paths
-├── agents/        # 7 agent system prompts (DE, markdown + front-matter)
-├── briefs/        # Input (structured markdown)
-├── debates/       # Per-session: conversation.json, cost-tracking.json
-├── memos/         # Output: decision memos
-└── expertise/     # Persistent per-agent knowledge
-```
-
-## Constraints
-
-- **Time**: 2-10 minutes per session (config.yaml)
-- **Budget**: $1-$20 per session (config.yaml)
-- **Rounds**: min 2, max 10
-- **Brief validation**: Must have Situation, Stakes, Constraints, Key Questions
-- **Dry Run**: `meeting.dry_run: true` — mock responses, no API costs
-- Never remove time/budget limits from config.yaml
-- Never delete `ceo-agents/expertise/` — agents lose accumulated knowledge
-
-## Coding Conventions
-
-- Agent system prompts: German, custom front-matter (`model`, `skills`, `expertise`)
-- System prompt structure: Purpose → Variables → Instructions → Temperament → Heuristics → Workflow → Report
-- Extension code: English TypeScript, modular in `.pi/extensions/lib/`
-- Briefs: German, required sections enforced by brief-parser
-- All repeatable commands in `justfile`
-- Config paths are relative to `ceo-agents/` (basePath)
+- `CLAUDE.md` — this file, with the full Standard Workflow
+- `docs/CLAUDE.template.md` — same workflow as a fillable project template
+- `docs/claude-setup.sh` — auto-setup script for any repo
+- `docs/settings.local.template.json` — open permissions config
+- `.claude/settings.local.json` — permissions for this repo
 
 ---
 
@@ -106,8 +53,8 @@ Search for existing solutions before building. Use in this order:
 ### Step 4: Review
 
 1. Invoke `superpowers:requesting-code-review`
-2. Use `typescript-reviewer` for extension code
-3. Use `security-reviewer` when touching auth, API calls, budget logic
+2. Use language-specific reviewer: `python-reviewer` / `typescript-reviewer` / `go-reviewer` / `rust-reviewer`
+3. Use `security-reviewer` when touching auth, user input, DB queries, API endpoints, crypto, payments
 
 ### Step 5: Verify
 
@@ -156,6 +103,14 @@ For complex tasks:
 | Build bricht | `build-fix` / `build-error-resolver` Agent |
 | Kontext wird voll | `superpowers:strategic-compact` |
 | Loop stalled | `long-term-agent-ops` |
+
+## Coding Standards
+
+- **Immutability**: ALWAYS create new objects, NEVER mutate
+- **Small files**: 200-400 lines, max 800. Functions < 50 lines
+- **Error Handling**: Explicit at every level, never swallow
+- **Input Validation**: Validate at boundaries, fail fast
+- **Security**: No hardcoded secrets, parameterized queries, sanitized HTML
 
 ## Agent Orchestration
 
