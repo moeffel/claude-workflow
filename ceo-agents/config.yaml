@@ -1,0 +1,103 @@
+# CEO & Board Multi-Agent Decision System Configuration
+# Based on IndyDevDan's architecture (agenticengineer.com)
+
+meeting:
+  max_duration_minutes: 15
+  max_budget_usd: 25.00
+  min_rounds: 3
+  max_rounds: 8
+  dry_run: false
+  checkpoint_after_round: 2
+  checkpoint_min_new_assumptions: 3
+  research_enabled: true
+  research_max_searches: 15
+  research_timeout_seconds: 180
+
+brief:
+  required_sections:
+    - "## Situation"
+    - "## Status Quo"
+    - "## Stakes"
+    - "## Constraints"
+    - "## Key Questions"
+
+paths:
+  briefs: briefs
+  debates: debates
+  memos: memos
+  agents: agents
+  expertise: expertise
+
+board:
+  ceo:
+    file: agents/ceo.md
+    model: opus-4-6
+  # Active roster — set to "auto" for AI-recommended roster per brief
+  active_roster: career
+  rosters:
+    career:
+      description: "Karriere- und Lebensentscheidungen"
+      members:
+        - name: financial-realist
+          file: agents/financial-realist.md
+          model: sonnet-4-6
+        - name: career-advisor
+          file: agents/career-advisor.md
+          model: sonnet-4-6
+        - name: wellbeing-guardian
+          file: agents/wellbeing-guardian.md
+          model: sonnet-4-6
+        - name: compounder
+          file: agents/compounder.md
+          model: sonnet-4-6
+        - name: contrarian
+          file: agents/contrarian.md
+          model: sonnet-4-6
+        - name: moonshot
+          file: agents/moonshot.md
+          model: sonnet-4-6
+    business:
+      description: "Business- und Investmententscheidungen"
+      members:
+        - name: financial-realist
+          file: agents/financial-realist.md
+          model: sonnet-4-6
+        - name: compounder
+          file: agents/compounder.md
+          model: sonnet-4-6
+        - name: contrarian
+          file: agents/contrarian.md
+          model: sonnet-4-6
+        - name: moonshot
+          file: agents/moonshot.md
+          model: sonnet-4-6
+  # Legacy fallback — used if active_roster not set
+  members:
+    - name: financial-realist
+      file: agents/financial-realist.md
+      model: sonnet-4-6
+    - name: career-advisor
+      file: agents/career-advisor.md
+      model: sonnet-4-6
+    - name: wellbeing-guardian
+      file: agents/wellbeing-guardian.md
+      model: sonnet-4-6
+    - name: compounder
+      file: agents/compounder.md
+      model: sonnet-4-6
+    - name: contrarian
+      file: agents/contrarian.md
+      model: sonnet-4-6
+    - name: moonshot
+      file: agents/moonshot.md
+      model: sonnet-4-6
+
+tts:
+  enabled: false
+  provider: elevenlabs  # elevenlabs | openai | pyttsx3
+  # api_key: set via ELEVENLABS_API_KEY env var
+
+output:
+  open_memo_in_editor: true
+  generate_svg: true
+  generate_mp3: false

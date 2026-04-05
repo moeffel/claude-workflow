@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Live project artifacts (generated, not templated)
+ceo-agents/debates/
+ceo-agents/memos/
+ceo-agents/research/
+ceo-agents/expertise/*.md
+!ceo-agents/expertise/.gitkeep
+
+# Keep only the brief template
+ceo-agents/briefs/*.md
+!ceo-agents/briefs/_template.md
+
+# Environment
+.env
+.env.*
+
+# PI session data
+.pi/sessions/
+.pi/cache/
+
+# Playwright
+.playwright-mcp/
+
+# OS
+.DS_Store
+Thumbs.db
