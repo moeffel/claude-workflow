@@ -1,0 +1,25 @@
+{
+  "_comment": "Copy to .claude/settings.local.json — adjust permissions for your project",
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+      "Bash(just *)",
+      "Bash(curl *)",
+      "Bash(chmod *)",
+      "Bash(mkdir *)",
+      "Bash(ls *)",
+      "Bash(echo *)",
+      "mcp__playwright__*"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(sudo *)"
+    ]
+  }
+}
