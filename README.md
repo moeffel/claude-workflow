@@ -9,8 +9,9 @@ Integrates **superpowers** + **Everything Claude Code (ECC)** skills into one co
 | File | Purpose |
 |------|---------|
 | `CLAUDE.md` | The workflow itself — Claude reads and follows this |
+| **`setup.sh`** | **One-time plugin installer — run after cloning** |
 | `docs/CLAUDE.template.md` | Same workflow with fillable project sections |
-| `docs/claude-setup.sh` | Auto-setup: detects language/framework, creates config |
+| `docs/claude-setup.sh` | Auto-setup for existing repos (creates CLAUDE.md + settings) |
 | `docs/settings.local.template.json` | Open permissions (skip-permissions equivalent) |
 | `.claude/settings.local.json` | Pre-configured open permissions |
 
@@ -42,7 +43,14 @@ Integrates **superpowers** + **Everything Claude Code (ECC)** skills into one co
 
 ### Option 1: Use as GitHub Template
 
-Click **"Use this template"** → creates a new repo with the workflow pre-configured.
+Click **"Use this template"** on GitHub → creates a new repo with the workflow pre-configured. Then:
+
+```bash
+git clone https://github.com/YOUR_USER/YOUR_NEW_REPO.git
+cd YOUR_NEW_REPO
+bash setup.sh    # installs all plugins (superpowers, ECC, codex, ui-ux-pro-max, ...)
+claude           # start working — workflow is active
+```
 
 ### Option 2: Setup Script (any existing repo)
 

@@ -2,6 +2,12 @@
 
 Template repo for the Claude Code Standard Workflow. Drop into any project.
 
+## First Run (once after cloning)
+
+Run `bash setup.sh` to install all required plugins. If a plugin is already installed, it's skipped.
+
+If you are Claude and this is the first session in this repo, check if plugins are available by looking for skills like `superpowers:brainstorming` and `learn`. If missing, tell the user to run `bash setup.sh`.
+
 ## Tech Stack
 
 - **Type**: Configuration template (no runtime code)
@@ -10,8 +16,9 @@ Template repo for the Claude Code Standard Workflow. Drop into any project.
 ## What This Contains
 
 - `CLAUDE.md` — this file, with the full Standard Workflow
+- `setup.sh` — one-time plugin installer (run after cloning)
 - `docs/CLAUDE.template.md` — same workflow as a fillable project template
-- `docs/claude-setup.sh` — auto-setup script for any repo
+- `docs/claude-setup.sh` — auto-setup for existing repos (creates CLAUDE.md + settings)
 - `docs/settings.local.template.json` — open permissions config
 - `.claude/settings.local.json` — permissions for this repo
 
