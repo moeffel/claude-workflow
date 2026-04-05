@@ -4,7 +4,7 @@
 # Funktioniert auf CLI, Desktop, IDE UND Claude Cloud.
 #
 # Usage:
-#   curl -sL https://raw.githubusercontent.com/moeffel/ceo-board-template/main/docs/claude-setup.sh | bash
+#   curl -sL https://raw.githubusercontent.com/moeffel/agent-board/main/docs/claude-setup.sh | bash
 
 set -e
 
