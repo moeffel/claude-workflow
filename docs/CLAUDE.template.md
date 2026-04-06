@@ -33,167 +33,186 @@ Describe key directories.
 
 ## Standard Workflow
 
-Follow this workflow for ALL implementation tasks. Each step is mandatory unless explicitly skipped by the user.
+Follow this workflow for ALL implementation tasks. Each step is mandatory unless explicitly skipped by the user. If a skill mentioned below is available, invoke it. If not, follow the written instructions directly.
 
-### Step 0: Research & Reuse (before writing ANY new code)
+### Step 0: Research & Reuse
 
-Search for existing solutions before building. Use in this order:
-1. `research-mode` → `search-first` — GitHub code search, existing implementations
-2. `docs` / Context7 — Library docs, API behavior
-3. `deep-research` → `exa-search` — Broader web research only if 1+2 insufficient
-4. Check package registries (npm, PyPI, crates.io) — prefer battle-tested libraries
+**Before writing ANY new code**, search for existing solutions:
 
-### Step 1: Brainstorm (mandatory before creative work)
+1. Search GitHub for existing implementations (`gh search code`, `gh search repos`)
+2. Check library docs for API behavior and patterns (Context7 or official docs)
+3. Search package registries (npm, PyPI, crates.io) — prefer battle-tested libraries over hand-rolled code
+4. Search the web for broader context only if steps 1-3 are insufficient
+5. Look for open-source projects that solve 80%+ of the problem
 
-1. Invoke `superpowers:brainstorming`
-2. Then `spec-expander` (always AFTER brainstorming)
-3. Optionally `spec-reviewer` for adversarial review
+Prefer adopting a proven approach over writing from scratch.
+
+> CLI skill chain: `research-mode` → `search-first` → `docs` → `deep-research` → `exa-search`
+
+### Step 1: Brainstorm
+
+**Mandatory before any creative or design work.** Do not jump to implementation.
+
+1. Generate multiple approaches (at least 3). Consider trade-offs for each.
+2. Expand the idea into a structured spec with:
+   - Feature list with clear scope boundaries
+   - User stories or acceptance criteria
+   - Technical constraints and dependencies
+   - Out of scope (explicitly state what NOT to build)
+3. If the user provides only 1-4 sentences, expand into a full spec before planning.
+
+> CLI skills: `superpowers:brainstorming` → `spec-expander` → `spec-reviewer`
 
 ### Step 2: Plan
 
-1. Invoke `superpowers:writing-plans`
-2. Use **planner** agent to create implementation plan with phases, dependencies, risks
-3. Plan goes to `docs/superpowers/plans/`
+1. Create a structured implementation plan before writing code:
+   - Break into phases (each independently testable)
+   - Identify dependencies between phases
+   - List risks and mitigation strategies
+   - Estimate complexity per phase
+2. Write the plan to `docs/superpowers/plans/YYYY-MM-DD-name.md`
+3. Get user confirmation before proceeding to implementation
+
+> CLI skills: `superpowers:writing-plans` + **planner** agent
 
 ### Step 3: Implement
 
-1. Invoke `superpowers:executing-plans`
-2. Use `superpowers:subagent-driven-development` for parallel independent tasks
-3. TDD is mandatory: `superpowers:test-driven-development` / `tdd`
-   - RED: Write test first, verify it fails
-   - GREEN: Write minimal implementation to pass
-   - IMPROVE: Refactor, verify 80%+ coverage
-4. After each file edit, `quality-gate` runs automatically (PostToolUse hook if configured)
+1. Execute the plan phase by phase. Do not skip ahead.
+2. For each phase, follow TDD strictly:
+   - **RED**: Write the test first. Run it. It MUST fail.
+   - **GREEN**: Write the minimal code to make the test pass.
+   - **IMPROVE**: Refactor while keeping tests green.
+3. Target 80%+ test coverage.
+4. Use parallel agents/subagents for independent tasks within a phase.
+5. After each file edit, review your own change for obvious issues before moving on.
+
+> CLI skills: `superpowers:executing-plans` + `superpowers:subagent-driven-development` + `tdd` + `quality-gate`
 
 ### Step 4: Review
 
-1. Invoke `superpowers:requesting-code-review`
-2. Use language-specific reviewer: `python-reviewer` / `typescript-reviewer` / `go-reviewer` / `rust-reviewer` / `cpp-reviewer` / `kotlin-reviewer` / `java-reviewer` / `flutter-reviewer`
-3. Use `security-reviewer` when touching auth, user input, DB queries, API endpoints, crypto, payments
-4. Use `database-reviewer` when writing SQL, creating migrations, or designing schemas
+1. Review all code changes before considering work done:
+   - **Correctness**: Does it do what was asked? Edge cases handled?
+   - **Security**: No hardcoded secrets? Inputs validated? Queries parameterized? Auth checked?
+   - **Quality**: Functions < 50 lines? Files < 800 lines? No deep nesting? Immutable patterns?
+   - **Tests**: Do tests cover the happy path AND error cases?
+2. For security-sensitive code (auth, payments, user input, DB, crypto): do an explicit security review.
+3. For database changes: review schema design, query performance, migration safety.
+
+> CLI skills: `superpowers:requesting-code-review` + `python-reviewer` / `typescript-reviewer` / `go-reviewer` / `rust-reviewer` + `security-reviewer` + `database-reviewer`
 
 ### Step 5: Verify
 
-1. Invoke `superpowers:verification-before-completion` + `verify`
-2. Run `context-budget` to check token consumption before wrapping up
-3. Never say "done" without running this step
+**Never say "done" without this step.**
+
+1. Re-read the original request. Does the implementation match?
+2. Run all tests. Do they pass?
+3. Check for regressions — did anything else break?
+4. Verify the user can actually use what was built (not just that it compiles).
+5. List any known limitations or follow-up items.
+
+> CLI skills: `superpowers:verification-before-completion` + `verify` + `context-budget`
 
 ### Step 6: Git
 
-1. `superpowers:finishing-a-development-branch`
-2. `superpowers:using-git-worktrees` for feature isolation
-3. Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`
+1. Stage only relevant files (never `git add .` blindly).
+2. Use conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`, `perf:`, `ci:`
+3. Commit message: focus on WHY, not WHAT. The diff shows the what.
+4. One logical change per commit.
 
-### Step 7: Learn (after completing a task)
+> CLI skills: `superpowers:finishing-a-development-branch` + `superpowers:using-git-worktrees`
 
-1. Run `learn` / `learn-eval` to extract reusable patterns from the session
-2. Instincts are saved per-project and can be promoted to global with `promote`
-3. Run `instinct-status` to see accumulated learnings
-4. Run `prune` periodically to clean stale instincts
+### Step 7: Learn
+
+After completing a task, capture what was learned:
+
+1. What patterns emerged that could be reused?
+2. What was surprising or non-obvious?
+3. What would you do differently next time?
+4. Document decisions and their reasoning in commit messages or docs.
+
+> CLI skills: `learn` / `learn-eval` → `instinct-status` → `promote` → `prune`
 
 ---
 
 ## Model-Routing
 
-MANDATORY for any agent spawning. Default: Sonnet. Escalate to Opus only for deep reasoning. Drop to Haiku for mechanical tasks.
+When spawning agents, choose the right model:
 
-| Task | Model | Cost/1M (in/out) |
-|------|-------|-------------------|
-| Classification, extraction, summaries | Haiku 4.5 | $0.80 / $4 |
-| Code generation, reviews, research | Sonnet 4.6 | $3 / $15 |
-| Architecture, synthesis, root-cause | Opus 4.6 | $15 / $75 |
+| Task type | Model | Why |
+|-----------|-------|-----|
+| Simple extraction, classification, formatting | **Haiku** | Fast, cheap ($0.80/M), 90% of Sonnet quality |
+| Code generation, reviews, research, most work | **Sonnet** (default) | Best cost/quality for coding ($3/M) |
+| Architecture, deep reasoning, root-cause analysis | **Opus** | Deepest reasoning ($15/M), use sparingly |
+
+Default to Sonnet. Only escalate to Opus when reasoning depth matters. Drop to Haiku for mechanical tasks.
 
 ## Design-Routing
 
-MANDATORY for ANY UI/design task:
+For ANY UI/design task (components, pages, styling, colors, typography, charts, layouts):
 
-1. `superpowers:brainstorming` — generate ideas
-2. `design-workflow` — orchestrator
-3. `ui-ux-pro-max` — **WAS**: design decisions, layout, UX
-4. `modern-web-builder` — **WIE**: code patterns
-5. `frontend-patterns` — framework-specific patterns
+1. **Brainstorm** — generate 3+ design approaches with trade-offs
+2. **Design decisions** — choose layout, hierarchy, spacing, color, typography. Decide WHAT the design should be.
+3. **Implementation** — translate design into code. Choose HOW: CSS approach, animation library, component structure.
+4. **Review** — check accessibility, responsiveness, performance, consistency.
+
+> CLI skill chain: `superpowers:brainstorming` → `design-workflow` → `ui-ux-pro-max` → `modern-web-builder` → `frontend-patterns`
 
 ## Cross-Model Workflow
 
-For complex tasks:
-1. **PLAN** → Claude (Opus) writes plan in `docs/superpowers/plans/`
-2. **QA REVIEW** → Codex reviews plan against real code (`codex:rescue`)
-3. **IMPLEMENT** → Claude executes with test gates
-4. **VERIFY** → Codex verifies implementation
+For complex tasks that benefit from a second perspective:
 
-Invoke `cross-model` skill for handoff protocols.
+1. **PLAN** → Write a detailed plan in `docs/superpowers/plans/`
+2. **QA REVIEW** → Have the plan reviewed against the actual codebase (a different model or agent catches things the planner missed)
+3. **IMPLEMENT** → Execute phase by phase with test gates between phases
+4. **VERIFY** → Verify the implementation matches the plan (pass/warn/fail per phase)
 
-## Context & Session Management
+> CLI skills: `cross-model` + `codex:rescue`
 
-| Situation | Skill |
-|-----------|-------|
-| Context window filling up | `strategic-compact` — suggests manual compaction at logical intervals |
-| Token budget unclear | `context-budget` — audits consumption across agents, skills, MCPs |
-| End of session | `save-session` — persist session state for resume |
-| Resume previous work | `resume-session` — load last session file |
-| Multi-session work | `long-term-agent-ops` — loop selection, checkpoints, stall detection |
+## Context Management
 
-## Quality & Learning
+| Situation | What to do |
+|-----------|-----------|
+| Context filling up | Summarize completed work, drop verbose tool outputs, keep only what's needed for current task |
+| Long session | At natural milestones, offer to summarize progress and compress context |
+| Resuming previous work | Read recent git log + any plan docs to reconstruct state |
+| Multi-file refactoring | Break into smaller commits. Don't hold too many files in context at once. |
 
-| Trigger | Skill |
-|---------|-------|
-| After each file edit | `quality-gate` — automated quality check (PostToolUse) |
-| After completing a task | `learn` / `learn-eval` — extract reusable patterns |
-| View learned patterns | `instinct-status` — show instincts with confidence |
-| Promote to global | `promote` — move project instincts to global scope |
-| Clean stale patterns | `prune` — delete pending instincts older than 30 days |
-| Evaluate session quality | `eval` — formal evaluation of session against goals |
-| Evolve patterns | `evolve` — analyze instincts and suggest improvements |
+> CLI skills: `strategic-compact`, `context-budget`, `save-session`, `resume-session`
 
 ## Bei Problemen
 
-| Situation | Skill |
-|-----------|-------|
-| Bug/Fehler | `superpowers:systematic-debugging` |
-| Build bricht | `build-fix` / `build-error-resolver` Agent |
-| Kontext wird voll | `strategic-compact` + `context-budget` |
-| Loop stalled | `long-term-agent-ops` |
-| Need second opinion | `codex:rescue` — delegate to Codex for investigation |
-| Security concern | `security-scan` — scan .claude/ config for vulnerabilities |
+| Situation | What to do |
+|-----------|-----------|
+| Bug or test failure | Read the error. Check assumptions. Reproduce minimally. Fix root cause, not symptoms. |
+| Build breaks | Read the full error output. Fix incrementally. Verify after each fix. |
+| Stuck on approach | Step back. Re-read the requirement. Try a fundamentally different approach. |
+| Context too large | Summarize what's done, what's left. Start fresh section if needed. |
+| Need second opinion | Explain the problem clearly, list what you've tried, ask for alternative approaches. |
+
+> CLI skills: `superpowers:systematic-debugging`, `build-fix`, `codex:rescue`, `security-scan`
 
 ## Coding Standards
 
-- **Immutability**: ALWAYS create new objects, NEVER mutate
-- **Small files**: 200-400 lines, max 800. Functions < 50 lines
-- **Error Handling**: Explicit at every level, never swallow
-- **Input Validation**: Validate at boundaries, fail fast
-- **Security**: No hardcoded secrets, parameterized queries, sanitized HTML
+- **Immutability**: Create new objects, never mutate existing ones
+- **Small files**: 200-400 lines typical, 800 max. Functions < 50 lines.
+- **Error handling**: Explicit at every level. Never silently swallow errors.
+- **Input validation**: Validate at system boundaries. Fail fast with clear messages.
+- **Security**: No hardcoded secrets. Parameterized queries. Sanitized HTML. CSRF protection.
+- **No over-engineering**: Don't add features, abstractions, or "improvements" beyond what was asked.
 
 ## Agent Orchestration
 
-Use agents proactively without waiting for user prompt:
+Use sub-agents proactively when the situation calls for it:
 
-| Trigger | Agent |
-|---------|-------|
-| Complex feature request | **planner** |
-| Code just written/modified | **code-reviewer** |
-| Bug fix or new feature | **tdd-guide** |
-| Architectural decision | **architect** |
-| Security-sensitive code | **security-reviewer** |
-| Build failure | **build-error-resolver** |
-| Database changes | **database-reviewer** |
-| Dead code / cleanup | **refactor-cleaner** |
-| Documentation updates | **doc-updater** |
-| E2E test needed | **e2e-runner** |
-| Performance issue | **performance-optimizer** |
+| Situation | Agent type |
+|-----------|-----------|
+| Complex feature with multiple phases | **planner** — create implementation plan |
+| Code was just written or modified | **code-reviewer** — review for quality and bugs |
+| New feature or bug fix | **tdd-guide** — enforce test-first methodology |
+| System design decision needed | **architect** — evaluate trade-offs |
+| Touching auth, payments, user data | **security-reviewer** — check for vulnerabilities |
+| Build or type errors | **build-error-resolver** — fix incrementally |
+| SQL or schema changes | **database-reviewer** — check query performance and safety |
+| Unused code accumulating | **refactor-cleaner** — identify and remove dead code |
 
-ALWAYS use parallel agent execution for independent operations.
-
-## Multi-Agent Patterns
-
-For complex multi-agent work, consult these skills:
-
-| Pattern | Skill |
-|---------|-------|
-| Team composition | `team-builder` — interactive agent picker |
-| Orchestration strategy | `orchestrate` — sequential vs tmux/worktree guidance |
-| Parallel agents from plan | `superpowers:dispatching-parallel-agents` |
-| DevFleet (parallel Claude instances) | `devfleet` / `claude-devfleet` |
-| Harness design | `harness-designer` — build new agent systems from scratch |
-| Battle-tested patterns | `harness-patterns` — GAN-evaluator, sprint contracts, bias elimination |
-| Autonomous loops | `autonomous-loops` — continuous agent loop architectures |
+Run independent agents in **parallel**. Don't wait for one to finish if another can start.
