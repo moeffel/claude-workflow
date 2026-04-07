@@ -19,6 +19,7 @@ Integrates **superpowers** + **Everything Claude Code (ECC)** skills into one co
 
 | Step | Skills (superpowers + ECC) | What Happens |
 |------|---------------------------|-------------|
+| **Session Start** | **MemPalace** wake-up + git log + active plan | Load project memory, brief user on state |
 | **0. Research** | `search-first` → `docs` → `deep-research` → `exa-search` | Find existing solutions before building |
 | **1. Brainstorm** | `superpowers:brainstorming` | Generate ideas, expand spec |
 | **2. Plan** | `superpowers:writing-plans` + **planner** agent | Structured plan with phases and risks |
@@ -26,7 +27,8 @@ Integrates **superpowers** + **Everything Claude Code (ECC)** skills into one co
 | **4. Review** | `superpowers:requesting-code-review` + language reviewer + `security-reviewer` + `database-reviewer` | Quality + security + DB review |
 | **5. Verify** | `superpowers:verification-before-completion` + `context-budget` | Verify completion + check token usage |
 | **6. Git** | `superpowers:finishing-a-development-branch` | Conventional commits, worktrees |
-| **7. Learn** | `learn` / `learn-eval` → `instinct-status` → `promote` + **MemPalace** | Extract patterns, build project instincts, persist across sessions |
+| **7. Learn** | `learn` / `learn-eval` → `instinct-status` → `promote` | Extract patterns, build project instincts |
+| **Session End** | **MemPalace** store decisions + state + handoff note | Persist everything for next session |
 
 ### Also Included
 
