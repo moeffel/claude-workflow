@@ -26,14 +26,14 @@ Integrates **superpowers** + **Everything Claude Code (ECC)** skills into one co
 | **4. Review** | `superpowers:requesting-code-review` + language reviewer + `security-reviewer` + `database-reviewer` | Quality + security + DB review |
 | **5. Verify** | `superpowers:verification-before-completion` + `context-budget` | Verify completion + check token usage |
 | **6. Git** | `superpowers:finishing-a-development-branch` | Conventional commits, worktrees |
-| **7. Learn** | `learn` / `learn-eval` → `instinct-status` → `promote` | Extract patterns, build project instincts |
+| **7. Learn** | `learn` / `learn-eval` → `instinct-status` → `promote` + **MemPalace** | Extract patterns, build project instincts, persist across sessions |
 
 ### Also Included
 
 - **Model-Routing** — Haiku / Sonnet / Opus per task type with cost table
 - **Design-Routing** — brainstorming → frontend-design → ui-ux-pro-max → frontend-patterns
 - **Cross-Model** — Claude plans, Codex reviews (`/codex:review`), Claude implements, Codex verifies (`/codex:rescue`)
-- **Context Management** — `strategic-compact`, `context-budget`, `save-session`, `resume-session`
+- **Context Management** — `strategic-compact`, `context-budget`, `save-session`, `resume-session` + **MemPalace** (persistent cross-session memory)
 - **Quality & Learning** — `quality-gate`, `learn`, `instinct-status`, `promote`, `prune`, `eval`, `evolve`
 - **11 Agents** — planner, code-reviewer, tdd-guide, architect, security-reviewer, build-error-resolver, database-reviewer, refactor-cleaner, doc-updater, e2e-runner, performance-optimizer
 - **Multi-Agent Patterns** — `team-builder`, `orchestrate`, `devfleet`, `harness-patterns`, `autonomous-loops`
@@ -100,6 +100,7 @@ The workflow references skills from these plugins. Install them for the full exp
 | **Everything Claude Code** | `claude plugins install everything-claude-code` | quality-gate, learn, instinct-status, context-budget, strategic-compact, build-fix, reviewers, agents |
 | **Codex** | `claude plugins install codex` | `/codex:rescue`, `/codex:review`, `/codex:adversarial-review` |
 | **ui-ux-pro-max** | `claude plugins install ui-ux-pro-max` | Design intelligence for UI tasks |
+| **MemPalace** | `pip install mempalace` + `claude mcp add mempalace -- python -m mempalace.mcp_server` | Persistent cross-session memory (96.6% LongMemEval, local-first, free) |
 
 The workflow degrades gracefully — skills that aren't installed are simply skipped.
 

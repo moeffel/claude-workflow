@@ -106,8 +106,10 @@ After completing a task, capture what was learned:
 2. What was surprising or non-obvious?
 3. What would you do differently next time?
 4. Document decisions and their reasoning in commit messages or docs.
+5. If MemPalace is available, store key decisions, architectural choices, and discovered patterns for cross-session recall.
 
 > CLI skills: `learn` / `learn-eval` → `instinct-status` → `promote` → `prune`
+> Persistent: MemPalace MCP tools for cross-session knowledge retention
 
 ---
 
@@ -151,11 +153,13 @@ For complex tasks that benefit from a second perspective:
 |-----------|-----------|
 | Context filling up | Summarize completed work, drop verbose tool outputs, keep only what's needed for current task |
 | Long session | At natural milestones, offer to summarize progress and compress context |
-| Resuming previous work | Read recent git log + any plan docs to reconstruct state |
+| Resuming previous work | Read recent git log + any plan docs + **MemPalace search** to reconstruct state |
 | Multi-file refactoring | Break into smaller commits. Don't hold too many files in context at once. |
+| Cross-session memory | Use **MemPalace** MCP tools to store/retrieve decisions, patterns, and project knowledge |
 
 > CLI skills (ECC): `strategic-compact` (PreToolUse hook), `context-budget` (skill + command), `save-session`, `resume-session`
 > Superpowers: SessionStart hook re-injects skills context on `startup|clear|compact` automatically
+> Persistent memory: **MemPalace** MCP server — local-first, 96.6% LongMemEval, ~170 tokens always-on context. Setup: `pip install mempalace && claude mcp add mempalace -- python -m mempalace.mcp_server`
 
 ## Bei Problemen
 
