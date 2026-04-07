@@ -17,6 +17,31 @@ if ! command -v claude &> /dev/null; then
     exit 1
 fi
 
+# --- MemPalace (persistent memory across sessions) ---
+echo "Setting up MemPalace..."
+echo ""
+
+if command -v pip &> /dev/null || command -v pip3 &> /dev/null; then
+    PIP_CMD=$(command -v pip3 || command -v pip)
+    echo -n "  mempalace... "
+    if $PIP_CMD install mempalace 2>/dev/null; then
+        echo "✓ installed"
+    else
+        echo "→ already installed or failed (Python 3.9+ required)"
+    fi
+
+    echo -n "  MCP server... "
+    if claude mcp add mempalace -- python -m mempalace.mcp_server 2>/dev/null; then
+        echo "✓ registered"
+    else
+        echo "→ already registered or unavailable"
+    fi
+else
+    echo "  ⚠  pip not found — skipping MemPalace (install Python 3.9+ first)"
+fi
+
+echo ""
+
 PLUGINS=(
     "superpowers@superpowers-marketplace"
     "everything-claude-code@everything-claude-code"

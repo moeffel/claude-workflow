@@ -174,6 +174,7 @@ For complex tasks:
 | Bug/Fehler | \`superpowers:systematic-debugging\` |
 | Build bricht | \`build-fix\` / \`build-error-resolver\` Agent |
 | Kontext wird voll | \`strategic-compact\` / \`context-budget\` |
+| Session-Wissen verloren | **MemPalace** MCP — persistentes Memory über Sessions hinweg |
 | Loop stalled | \`continuous-agent-loop\` (ECC) |
 
 ## Coding Standards
