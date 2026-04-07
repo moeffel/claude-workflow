@@ -95,7 +95,7 @@ Follow this workflow for ALL implementation tasks. Each step is mandatory unless
 ### Step 0: Research & Reuse (before writing ANY new code)
 
 Search for existing solutions before building. Use in this order:
-1. \`research-mode\` → \`search-first\` — GitHub code search, existing implementations
+1. \`search-first\` — GitHub code search, existing implementations
 2. \`docs\` / Context7 — Library docs, API behavior
 3. \`deep-research\` → \`exa-search\` — Broader web research only if 1+2 insufficient
 4. Check package registries (npm, PyPI, crates.io) — prefer battle-tested libraries
@@ -103,8 +103,8 @@ Search for existing solutions before building. Use in this order:
 ### Step 1: Brainstorm (mandatory before creative work)
 
 1. Invoke \`superpowers:brainstorming\`
-2. Then \`spec-expander\` (always AFTER brainstorming)
-3. Optionally \`spec-reviewer\` for adversarial review
+2. Expand the idea into a structured spec (feature list, acceptance criteria, constraints, out-of-scope)
+3. If the user provides only 1-4 sentences, expand into a full spec before planning
 
 ### Step 2: Plan
 
@@ -155,10 +155,9 @@ MANDATORY for any agent spawning. Default: Sonnet. Escalate to Opus only for dee
 MANDATORY for ANY UI/design task:
 
 1. \`superpowers:brainstorming\` — generate ideas
-2. \`design-workflow\` — orchestrator
+2. \`frontend-design\` — design thinking + aesthetic choices (official plugin)
 3. \`ui-ux-pro-max\` — **WAS**: design decisions, layout, UX
-4. \`modern-web-builder\` — **WIE**: code patterns
-5. \`frontend-patterns\` — framework-specific patterns
+4. \`frontend-patterns\` — **WIE**: framework-specific code patterns (ECC)
 
 ## Cross-Model Workflow
 
@@ -175,7 +174,7 @@ For complex tasks:
 | Bug/Fehler | \`superpowers:systematic-debugging\` |
 | Build bricht | \`build-fix\` / \`build-error-resolver\` Agent |
 | Kontext wird voll | \`strategic-compact\` / \`context-budget\` |
-| Loop stalled | \`long-term-agent-ops\` |
+| Loop stalled | \`continuous-agent-loop\` (ECC) |
 
 ## Coding Standards
 

@@ -24,7 +24,7 @@ Follow this workflow for ALL implementation tasks. Each step is mandatory unless
 
 Prefer adopting a proven approach over writing from scratch.
 
-> CLI skill chain: `research-mode` → `search-first` → `docs` → `deep-research` → `exa-search`
+> CLI skill chain: `search-first` → `docs` → `deep-research` → `exa-search`
 
 ### Step 1: Brainstorm
 
@@ -38,7 +38,7 @@ Prefer adopting a proven approach over writing from scratch.
    - Out of scope (explicitly state what NOT to build)
 3. If the user provides only 1-4 sentences, expand into a full spec before planning.
 
-> CLI skills: `superpowers:brainstorming` → `spec-expander` → `spec-reviewer`
+> CLI skills: `superpowers:brainstorming`
 
 ### Step 2: Plan
 
@@ -132,7 +132,7 @@ For ANY UI/design task (components, pages, styling, colors, typography, charts, 
 3. **Implementation** — translate design into code. Choose HOW: CSS approach, animation library, component structure.
 4. **Review** — check accessibility, responsiveness, performance, consistency.
 
-> CLI skill chain: `superpowers:brainstorming` → `design-workflow` → `ui-ux-pro-max` → `modern-web-builder` → `frontend-patterns`
+> CLI skill chain: `superpowers:brainstorming` → `frontend-design` → `ui-ux-pro-max` → `frontend-patterns`
 
 ## Cross-Model Workflow
 
@@ -143,7 +143,7 @@ For complex tasks that benefit from a second perspective:
 3. **IMPLEMENT** → Execute phase by phase with test gates between phases
 4. **VERIFY** → Verify the implementation matches the plan (pass/warn/fail per phase)
 
-> CLI skills: `cross-model` + `codex:rescue`
+> CLI skills: `/codex:rescue` + `/codex:review`
 
 ## Context Management
 
@@ -154,7 +154,8 @@ For complex tasks that benefit from a second perspective:
 | Resuming previous work | Read recent git log + any plan docs to reconstruct state |
 | Multi-file refactoring | Break into smaller commits. Don't hold too many files in context at once. |
 
-> CLI skills: `strategic-compact`, `context-budget`, `save-session`, `resume-session`
+> CLI skills (ECC): `strategic-compact` (PreToolUse hook), `context-budget` (skill + command), `save-session`, `resume-session`
+> Superpowers: SessionStart hook re-injects skills context on `startup|clear|compact` automatically
 
 ## Bei Problemen
 

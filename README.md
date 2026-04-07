@@ -19,8 +19,8 @@ Integrates **superpowers** + **Everything Claude Code (ECC)** skills into one co
 
 | Step | Skills (superpowers + ECC) | What Happens |
 |------|---------------------------|-------------|
-| **0. Research** | `research-mode` → `search-first` → `docs` → `deep-research` → `exa-search` | Find existing solutions before building |
-| **1. Brainstorm** | `superpowers:brainstorming` → `spec-expander` → `spec-reviewer` | Generate ideas, expand spec |
+| **0. Research** | `search-first` → `docs` → `deep-research` → `exa-search` | Find existing solutions before building |
+| **1. Brainstorm** | `superpowers:brainstorming` | Generate ideas, expand spec |
 | **2. Plan** | `superpowers:writing-plans` + **planner** agent | Structured plan with phases and risks |
 | **3. Implement** | `superpowers:executing-plans` + `tdd` + `quality-gate` | TDD: RED → GREEN → IMPROVE, auto quality checks |
 | **4. Review** | `superpowers:requesting-code-review` + language reviewer + `security-reviewer` + `database-reviewer` | Quality + security + DB review |
@@ -31,8 +31,8 @@ Integrates **superpowers** + **Everything Claude Code (ECC)** skills into one co
 ### Also Included
 
 - **Model-Routing** — Haiku / Sonnet / Opus per task type with cost table
-- **Design-Routing** — brainstorming → ui-ux-pro-max → modern-web-builder
-- **Cross-Model** — Claude plans, Codex reviews (`codex:rescue`), Claude implements, Codex verifies
+- **Design-Routing** — brainstorming → frontend-design → ui-ux-pro-max → frontend-patterns
+- **Cross-Model** — Claude plans, Codex reviews (`/codex:review`), Claude implements, Codex verifies (`/codex:rescue`)
 - **Context Management** — `strategic-compact`, `context-budget`, `save-session`, `resume-session`
 - **Quality & Learning** — `quality-gate`, `learn`, `instinct-status`, `promote`, `prune`, `eval`, `evolve`
 - **11 Agents** — planner, code-reviewer, tdd-guide, architect, security-reviewer, build-error-resolver, database-reviewer, refactor-cleaner, doc-updater, e2e-runner, performance-optimizer
@@ -98,7 +98,7 @@ The workflow references skills from these plugins. Install them for the full exp
 |--------|---------|----------|
 | **superpowers** | `claude plugin marketplace add obra/superpowers-marketplace` → `claude plugins install superpowers@superpowers-marketplace` | brainstorming, writing-plans, executing-plans, TDD, verification, debugging |
 | **Everything Claude Code** | `claude plugins install everything-claude-code` | quality-gate, learn, instinct-status, context-budget, strategic-compact, build-fix, reviewers, agents |
-| **Codex** | `claude plugins install codex` | codex:rescue, cross-model workflow |
+| **Codex** | `claude plugins install codex` | `/codex:rescue`, `/codex:review`, `/codex:adversarial-review` |
 | **ui-ux-pro-max** | `claude plugins install ui-ux-pro-max` | Design intelligence for UI tasks |
 
 The workflow degrades gracefully — skills that aren't installed are simply skipped.
