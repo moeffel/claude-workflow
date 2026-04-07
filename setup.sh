@@ -18,7 +18,7 @@ if ! command -v claude &> /dev/null; then
 fi
 
 PLUGINS=(
-    "superpowers@claude-plugins-official"
+    "superpowers@superpowers-marketplace"
     "everything-claude-code@everything-claude-code"
     "context7@claude-plugins-official"
     "playwright@claude-plugins-official"
@@ -31,18 +31,34 @@ PLUGINS=(
 )
 
 MARKETPLACES=(
-    "ui-ux-pro-max-skill|github|nextlevelbuilder/ui-ux-pro-max-skill"
-    "openai-codex|github|openai/codex-plugin-cc"
-    "everything-claude-code|github|affaan-m/everything-claude-code"
+    "obra/superpowers-marketplace"
+    "nextlevelbuilder/ui-ux-pro-max-skill"
+    "openai/codex-plugin-cc"
+    "affaan-m/everything-claude-code"
 )
 
+echo "Registering custom marketplaces..."
+echo ""
+
+for marketplace in "${MARKETPLACES[@]}"; do
+    name="${marketplace##*/}"
+    echo -n "  ${name}... "
+
+    if claude plugin marketplace add "$marketplace" 2>/dev/null; then
+        echo "✓ registered"
+    else
+        echo "→ already registered or unavailable"
+    fi
+done
+
+echo ""
 echo "Installing plugins..."
 echo ""
 
 for plugin in "${PLUGINS[@]}"; do
     name="${plugin%%@*}"
     echo -n "  ${name}... "
-    
+
     # Try to install, ignore if already installed
     if claude plugins install "$plugin" 2>/dev/null; then
         echo "✓ installed"
