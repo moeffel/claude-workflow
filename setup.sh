@@ -53,6 +53,7 @@ PLUGINS=(
     "document-skills@anthropic-agent-skills"
     "example-skills@anthropic-agent-skills"
     "explanatory-output-style@claude-plugins-official"
+    "spec-kit@claude-night-market"
 )
 
 MARKETPLACES=(
@@ -60,6 +61,7 @@ MARKETPLACES=(
     "nextlevelbuilder/ui-ux-pro-max-skill"
     "openai/codex-plugin-cc"
     "affaan-m/everything-claude-code"
+    "athola/claude-night-market"
 )
 
 echo "Registering custom marketplaces..."

@@ -21,7 +21,7 @@ Integrates **superpowers** + **Everything Claude Code (ECC)** skills into one co
 |------|---------------------------|-------------|
 | **Session Start** | **MemPalace** wake-up + git log + active plan | Load project memory, brief user on state |
 | **0. Research** | `search-first` → `docs` → `deep-research` → `exa-search` | Find existing solutions before building |
-| **1. Brainstorm** | `superpowers:brainstorming` | Generate ideas, expand spec |
+| **1. Brainstorm & Spec** | `superpowers:brainstorming` → `spec-expander` → `spec-reviewer` | Generate ideas, write spec, adversarial review (KILL/FIX/SHIP) |
 | **2. Plan** | `superpowers:writing-plans` + **planner** agent | Structured plan with phases and risks |
 | **3. Implement** | `superpowers:executing-plans` + `tdd` + `quality-gate` | TDD: RED → GREEN → IMPROVE, auto quality checks |
 | **4. Review** | `superpowers:requesting-code-review` + language reviewer + `security-reviewer` + `database-reviewer` | Quality + security + DB review |

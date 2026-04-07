@@ -65,19 +65,23 @@ Prefer adopting a proven approach over writing from scratch.
 
 > CLI skill chain: `search-first` → `docs` → `deep-research` → `exa-search`
 
-### Step 1: Brainstorm
+### Step 1: Brainstorm & Spec
 
 **Mandatory before any creative or design work.** Do not jump to implementation.
 
 1. Generate multiple approaches (at least 3). Consider trade-offs for each.
-2. Expand the idea into a structured spec with:
-   - Feature list with clear scope boundaries
-   - User stories or acceptance criteria
-   - Technical constraints and dependencies
-   - Out of scope (explicitly state what NOT to build)
-3. If the user provides only 1-4 sentences, expand into a full spec before planning.
+2. **Expand into a full spec** using `spec-expander` skill:
+   - Interview the user to fill gaps (5-8 focused questions)
+   - Write structured spec: Problem, Users, Requirements (MUST/SHOULD/COULD), Acceptance Criteria, Out of Scope
+   - Save to `docs/specs/YYYY-MM-DD-[name].md`
+3. **Review the spec** using `spec-reviewer` skill:
+   - Score 7 dimensions (Clarity, Testability, Scope, Feasibility, Consistency, Security, Completeness)
+   - Adversarial challenge on every MUST requirement
+   - Verdict: KILL / FIX / SHIP — only proceed to planning on SHIP
+4. If available, get a cross-model review via `/codex:review` on the spec file for an independent perspective.
 
-> CLI skills: `superpowers:brainstorming`
+> CLI skills: `superpowers:brainstorming` → `spec-expander` → `spec-reviewer`
+> Optional plugin: `spec-kit` (athola/claude-night-market) for additional spec tooling
 
 ### Step 2: Plan
 
