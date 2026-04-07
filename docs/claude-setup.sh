@@ -100,11 +100,12 @@ Search for existing solutions before building. Use in this order:
 3. \`deep-research\` → \`exa-search\` — Broader web research only if 1+2 insufficient
 4. Check package registries (npm, PyPI, crates.io) — prefer battle-tested libraries
 
-### Step 1: Brainstorm (mandatory before creative work)
+### Step 1: Brainstorm & Spec (mandatory before creative work)
 
 1. Invoke \`superpowers:brainstorming\`
-2. Expand the idea into a structured spec (feature list, acceptance criteria, constraints, out-of-scope)
-3. If the user provides only 1-4 sentences, expand into a full spec before planning
+2. \`spec-expander\` — interview user, write structured spec to \`docs/specs/\`
+3. \`spec-reviewer\` — adversarial 7-dimension review (KILL/FIX/SHIP verdict)
+4. Only proceed to planning on SHIP verdict
 
 ### Step 2: Plan
 
