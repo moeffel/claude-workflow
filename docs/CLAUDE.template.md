@@ -35,6 +35,22 @@ Describe key directories.
 
 Follow this workflow for ALL implementation tasks. Each step is mandatory unless explicitly skipped by the user. If a skill mentioned below is available, invoke it. If not, follow the written instructions directly.
 
+### Session Start (MANDATORY — run at the beginning of EVERY session)
+
+Before any work begins, load project memory to establish continuity:
+
+1. **Load MemPalace context** — if MemPalace MCP is available, run `wake-up` or search for this project's wing to load critical facts (~170 tokens).
+2. **Check for open work** — search memory for: unfinished tasks, blockers from last session, pending decisions.
+3. **Read recent git log** — `git log --oneline -10` to see what happened since last session.
+4. **Read active plan** — check `docs/superpowers/plans/` for any in-progress plan and its current phase.
+5. **Brief the user** — summarize what you found: where we left off, what's next, any open questions.
+
+If MemPalace is not available, fall back to git log + plan docs + CLAUDE.md context only.
+
+> This step ensures no context is lost between sessions. Skip ONLY if the user explicitly says "fresh start".
+
+---
+
 ### Step 0: Research & Reuse
 
 **Before writing ANY new code**, search for existing solutions:
@@ -129,10 +145,26 @@ After completing a task, capture what was learned:
 2. What was surprising or non-obvious?
 3. What would you do differently next time?
 4. Document decisions and their reasoning in commit messages or docs.
-5. If MemPalace is available, store key decisions, architectural choices, and discovered patterns for cross-session recall.
 
 > CLI skills: `learn` / `learn-eval` → `instinct-status` → `promote` → `prune`
-> Persistent: MemPalace MCP tools for cross-session knowledge retention
+
+### Session End (MANDATORY — run before closing ANY session)
+
+Before the session ends, persist everything learned for future sessions:
+
+1. **Store decisions** — save all architectural decisions, trade-offs made, and their reasoning to MemPalace.
+2. **Store current state** — what was completed, what's still open, what's blocked and why.
+3. **Store patterns** — any reusable patterns, gotchas, or project-specific knowledge discovered.
+4. **Store context for next session** — a brief "handoff note" so the next session can pick up immediately:
+   - Current task and progress
+   - Files actively being worked on
+   - Open questions for the user
+   - Next steps in priority order
+5. **Verify memory consistency** — search MemPalace for contradictions with what was just stored. Update or flag conflicts.
+
+If MemPalace is not available, write a `docs/session-log.md` entry instead.
+
+> This step ensures the next session starts with full context. NEVER skip this step — the 2 minutes spent here save 20 minutes of re-discovery next session.
 
 ---
 
@@ -170,19 +202,21 @@ For complex tasks that benefit from a second perspective:
 
 > CLI skills: `/codex:rescue` + `/codex:review`
 
-## Context Management
+## Context & Memory Management
+
+**MemPalace** is the persistent memory layer across all sessions. Session Start and Session End (see workflow above) are the mandatory checkpoints. Between them:
 
 | Situation | What to do |
 |-----------|-----------|
 | Context filling up | Summarize completed work, drop verbose tool outputs, keep only what's needed for current task |
 | Long session | At natural milestones, offer to summarize progress and compress context |
-| Resuming previous work | Read recent git log + any plan docs + **MemPalace search** to reconstruct state |
+| Resuming previous work | Run **Session Start** protocol (git log + plan docs + MemPalace search) |
 | Multi-file refactoring | Break into smaller commits. Don't hold too many files in context at once. |
-| Cross-session memory | Use **MemPalace** MCP tools to store/retrieve decisions, patterns, and project knowledge |
+| Mid-session decision | Store immediately to MemPalace — don't wait for Session End if the decision is important |
 
 > CLI skills (ECC): `strategic-compact` (PreToolUse hook), `context-budget` (skill + command), `save-session`, `resume-session`
 > Superpowers: SessionStart hook re-injects skills context on `startup|clear|compact` automatically
-> Persistent memory: **MemPalace** MCP server — local-first, 96.6% LongMemEval, ~170 tokens always-on context. Setup: `pip install mempalace && claude mcp add mempalace -- python -m mempalace.mcp_server`
+> Persistent memory: **MemPalace** MCP server — local-first, 96.6% LongMemEval, ~170 tokens always-on. Setup: `pip install mempalace && claude mcp add mempalace -- python -m mempalace.mcp_server`
 
 ## Bei Problemen
 
