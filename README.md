@@ -96,7 +96,7 @@ The workflow references skills from these plugins. Install them for the full exp
 
 | Plugin | Install | Provides |
 |--------|---------|----------|
-| **superpowers** | Built-in (Claude Code official) | brainstorming, writing-plans, executing-plans, TDD, verification, debugging |
+| **superpowers** | `claude plugin marketplace add obra/superpowers-marketplace` → `claude plugins install superpowers@superpowers-marketplace` | brainstorming, writing-plans, executing-plans, TDD, verification, debugging |
 | **Everything Claude Code** | `claude plugins install everything-claude-code` | quality-gate, learn, instinct-status, context-budget, strategic-compact, build-fix, reviewers, agents |
 | **Codex** | `claude plugins install codex` | codex:rescue, cross-model workflow |
 | **ui-ux-pro-max** | `claude plugins install ui-ux-pro-max` | Design intelligence for UI tasks |

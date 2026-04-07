@@ -174,7 +174,7 @@ For complex tasks:
 |-----------|-------|
 | Bug/Fehler | \`superpowers:systematic-debugging\` |
 | Build bricht | \`build-fix\` / \`build-error-resolver\` Agent |
-| Kontext wird voll | \`superpowers:strategic-compact\` |
+| Kontext wird voll | \`strategic-compact\` / \`context-budget\` |
 | Loop stalled | \`long-term-agent-ops\` |
 
 ## Coding Standards
