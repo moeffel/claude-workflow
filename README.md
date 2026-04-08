@@ -38,7 +38,7 @@ Integrates **superpowers** + **Everything Claude Code (ECC)** skills into one co
 - **Context Management** — `strategic-compact`, `context-budget`, `save-session`, `resume-session` + **MemPalace** (persistent cross-session memory)
 - **Quality & Learning** — `quality-gate`, `learn`, `instinct-status`, `promote`, `prune`, `eval`, `evolve`
 - **11 Agents** — planner, code-reviewer, tdd-guide, architect, security-reviewer, build-error-resolver, database-reviewer, refactor-cleaner, doc-updater, e2e-runner, performance-optimizer
-- **Multi-Agent Patterns** — `team-builder`, `orchestrate`, `devfleet`, `harness-patterns`, `autonomous-loops`
+- **Multi-Agent Patterns** — `agent-harness-construction`, `claude-devfleet`, `autonomous-loops` (ECC)
 - **Debugging** — `systematic-debugging`, `build-fix`, `codex:rescue`, `security-scan`
 
 ## Quick Start
