@@ -195,16 +195,25 @@ For ANY UI/design task (components, pages, styling, colors, typography, charts, 
 
 > CLI skill chain: `superpowers:brainstorming` → `frontend-design` → `ui-ux-pro-max` → `frontend-patterns`
 
-## Cross-Model Workflow
+## 3-Agent Harness (for complex features)
 
-For complex tasks that benefit from a second perspective:
+1. **PLAN** → Spawn **planner** agent to decompose into phases
+2. **IMPLEMENT** → Spawn **implementer** agent — one phase at a time, fresh context, commits to `docs/progress.md`
+3. **EVALUATE** → Spawn **evaluator** agent — validates against spec, runs tests (PASS/WARN/FAIL)
 
-1. **PLAN** → Write a detailed plan in `docs/superpowers/plans/`
-2. **QA REVIEW** → Have the plan reviewed against the actual codebase (a different model or agent catches things the planner missed)
-3. **IMPLEMENT** → Execute phase by phase with test gates between phases
-4. **VERIFY** → Verify the implementation matches the plan (pass/warn/fail per phase)
+> Agents defined in `.claude/agents/`. Also: **reviewer**, **researcher**, **security-reviewer**
+> CLI: `/codex:rescue` + `/codex:review` for cross-model perspective
 
-> CLI skills: `/codex:rescue` + `/codex:review`
+## Autonomous Execution (Ralph Loop)
+
+For long-running tasks: iterative loops with fresh context per iteration, state externalized to filesystem.
+
+- **Cloud**: `/schedule` for cron-based execution on Anthropic infrastructure
+- **CLI**: `claude -p` (headless) in a loop script
+- **Remote**: `--remote` — session persists after browser close
+- Commit after every change, write `docs/progress.md`, cap iterations
+
+> Inspired by [multi-agent-ralph-loop](https://github.com/alfredolopez80/multi-agent-ralph-loop)
 
 ## Context & Memory Management
 
@@ -221,6 +230,18 @@ For complex tasks that benefit from a second perspective:
 > CLI skills (ECC): `strategic-compact` (PreToolUse hook), `context-budget` (skill + command), `save-session`, `resume-session`
 > Superpowers: SessionStart hook re-injects skills context on `startup|clear|compact` automatically
 > Persistent memory: **MemPalace** MCP server — local-first, 96.6% LongMemEval, ~170 tokens always-on. Setup: `pip install mempalace && claude mcp add mempalace -- python -m mempalace.mcp_server`
+
+## Continuous Learning
+
+| What to capture | Where to store | When |
+|----------------|---------------|------|
+| Architectural decisions + reasoning | MemPalace (decisions hall) | Immediately when decided |
+| Reusable patterns discovered | MemPalace (patterns hall) | During Step 7 (Learn) |
+| Anti-patterns / gotchas | MemPalace (anti-patterns hall) | When encountered |
+| Project-specific fixes | MemPalace (fixes hall) | After debugging |
+| Session handoff notes | MemPalace + `docs/progress.md` | Session End (mandatory) |
+
+> CLI skills: `learn` / `learn-eval` → `instinct-status` → `promote` → `prune`
 
 ## Bei Problemen
 
@@ -245,17 +266,13 @@ For complex tasks that benefit from a second perspective:
 
 ## Agent Orchestration
 
-Use sub-agents proactively when the situation calls for it:
-
-| Situation | Agent type |
+| Situation | Agent (`.claude/agents/`) |
 |-----------|-----------|
-| Complex feature with multiple phases | **planner** — create implementation plan |
-| Code was just written or modified | **code-reviewer** — review for quality and bugs |
-| New feature or bug fix | **tdd-guide** — enforce test-first methodology |
-| System design decision needed | **architect** — evaluate trade-offs |
+| Complex feature with multiple phases | **planner** — decompose into phased plan |
+| Implementation of a plan phase | **implementer** — execute one phase with TDD |
+| Validate completed work against spec | **evaluator** — PASS/WARN/FAIL per phase |
+| Code was just written or modified | **reviewer** — review for quality, security, bugs |
+| Research before building | **researcher** — find existing solutions |
 | Touching auth, payments, user data | **security-reviewer** — check for vulnerabilities |
-| Build or type errors | **build-error-resolver** — fix incrementally |
-| SQL or schema changes | **database-reviewer** — check query performance and safety |
-| Unused code accumulating | **refactor-cleaner** — identify and remove dead code |
 
-Run independent agents in **parallel**. Don't wait for one to finish if another can start.
+Run independent agents in **parallel**. For complex multi-agent workflows, use **Agent Teams** (enabled in `.claude/settings.json`).

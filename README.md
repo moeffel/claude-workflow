@@ -32,13 +32,15 @@ Integrates **superpowers** + **Everything Claude Code (ECC)** skills into one co
 
 ### Also Included
 
+- **3-Agent Harness** — planner → implementer → evaluator for complex features
+- **Autonomous Execution** — Ralph Loop pattern for hours of autonomous work (Cloud: `/schedule`, CLI: `claude -p`, Remote: `--remote`)
+- **Agent Teams** — Multi-agent parallel execution with shared task lists and direct communication
+- **6 Agent Definitions** — planner, implementer, evaluator, reviewer, researcher, security-reviewer (in `.claude/agents/`)
+- **Continuous Learning** — MemPalace taxonomy: halls (decisions/patterns/anti-patterns/fixes), rooms (topics), wings (scope)
+- **Cloud-Ready Config** — `.claude/settings.json` + `.mcp.json` committed to repo → 100% Cloud-Funktionalität
 - **Model-Routing** — Haiku / Sonnet / Opus per task type with cost table
 - **Design-Routing** — brainstorming → frontend-design → ui-ux-pro-max → frontend-patterns
-- **Cross-Model** — Claude plans, Codex reviews (`/codex:review`), Claude implements, Codex verifies (`/codex:rescue`)
-- **Context Management** — `strategic-compact`, `context-budget`, `save-session`, `resume-session` + **MemPalace** (persistent cross-session memory)
-- **Quality & Learning** — `quality-gate`, `learn`, `instinct-status`, `promote`, `prune`, `eval`, `evolve`
-- **11 Agents** — planner, code-reviewer, tdd-guide, architect, security-reviewer, build-error-resolver, database-reviewer, refactor-cleaner, doc-updater, e2e-runner, performance-optimizer
-- **Multi-Agent Patterns** — `agent-harness-construction`, `claude-devfleet`, `autonomous-loops` (ECC)
+- **Context Management** — `strategic-compact`, `context-budget`, `save-session`, `resume-session` + **MemPalace**
 - **Debugging** — `systematic-debugging`, `build-fix`, `codex:rescue`, `security-scan`
 
 ## Quick Start

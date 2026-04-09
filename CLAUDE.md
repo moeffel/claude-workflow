@@ -4,7 +4,7 @@ Standard development workflow for Claude. Works everywhere: CLI, Desktop, IDE, a
 
 On **CLI/Desktop**: Run `bash setup.sh` once after cloning to install plugins (superpowers, ECC, codex, etc.). Skills referenced below will activate automatically.
 
-On **Claude Cloud**: No setup needed. This file IS the workflow — follow the instructions directly.
+On **Claude Cloud**: No setup needed. This file IS the workflow — follow the instructions directly. Plugins, hooks, and MCP servers are declared in `.claude/settings.json` and `.mcp.json` (committed to the repo) and activate automatically on Cloud.
 
 ---
 
@@ -172,16 +172,45 @@ For ANY UI/design task (components, pages, styling, colors, typography, charts, 
 
 > CLI skill chain: `superpowers:brainstorming` → `frontend-design` → `ui-ux-pro-max` → `frontend-patterns`
 
-## Cross-Model Workflow
+## 3-Agent Harness (for complex features)
 
-For complex tasks that benefit from a second perspective:
+For features that span multiple files or require deep implementation:
 
-1. **PLAN** → Write a detailed plan in `docs/superpowers/plans/`
-2. **QA REVIEW** → Have the plan reviewed against the actual codebase (a different model or agent catches things the planner missed)
-3. **IMPLEMENT** → Execute phase by phase with test gates between phases
-4. **VERIFY** → Verify the implementation matches the plan (pass/warn/fail per phase)
+1. **PLAN** → Spawn **planner** agent (`.claude/agents/planner.md`) to decompose into phases
+2. **IMPLEMENT** → Spawn **implementer** agent (`.claude/agents/implementer.md`) — one phase at a time, fresh context per phase, commits progress to `docs/progress.md`
+3. **EVALUATE** → Spawn **evaluator** agent (`.claude/agents/evaluator.md`) — validates against spec, runs tests, verdict per phase (PASS/WARN/FAIL)
 
-> CLI skills: `/codex:rescue` + `/codex:review`
+Key principle: **Separate planning from execution from evaluation.** The planner can't be biased by implementation details. The evaluator provides "hard" feedback the implementer can't hallucinate away.
+
+> Agents defined in `.claude/agents/`. Also available: **reviewer**, **researcher**, **security-reviewer**
+> CLI skills: `/codex:rescue` + `/codex:review` for cross-model perspective
+
+## Autonomous Execution (Ralph Loop)
+
+For long-running tasks that require hours of autonomous work:
+
+**The Pattern:** Instead of one long session, use iterative loops with fresh context per iteration. State is externalized to the filesystem (git commits, progress files, specs).
+
+```
+Session 1: Plan → commit plan + progress.md
+Session 2: Read progress.md → implement phase 1 → commit → update progress.md
+Session 3: Read progress.md → implement phase 2 → commit → update progress.md
+...
+Session N: Read progress.md → evaluate → final commit
+```
+
+**How to trigger:**
+- **Cloud**: Use `/schedule` for cron-based autonomous execution on Anthropic infrastructure (runs even when your laptop is off)
+- **CLI**: Use `claude -p` (headless mode) in a loop script
+- **Remote**: Start with `--remote` — session persists after browser close
+
+**Safeguards:**
+- Commit after every meaningful change (recovery points)
+- Cap iterations (2-3 for code gen, 10-20 for outer loop)
+- Use test suites as primary feedback loop (not self-assessment)
+- Write `docs/progress.md` after each phase so next iteration knows the state
+
+> Inspired by [multi-agent-ralph-loop](https://github.com/alfredolopez80/multi-agent-ralph-loop): Ralph + MemPalace + Agent Teams + 4-stage quality gates
 
 ## Context & Memory Management
 
@@ -198,6 +227,27 @@ For complex tasks that benefit from a second perspective:
 > CLI skills (ECC): `strategic-compact` (PreToolUse hook), `context-budget` (skill + command), `save-session`, `resume-session`
 > Superpowers: SessionStart hook re-injects skills context on `startup|clear|compact` automatically
 > Persistent memory: **MemPalace** MCP server — local-first, 96.6% LongMemEval, ~170 tokens always-on. Setup: `pip install mempalace && claude mcp add mempalace -- python -m mempalace.mcp_server`
+
+## Continuous Learning
+
+Every session generates knowledge. Capture it systematically:
+
+| What to capture | Where to store | When |
+|----------------|---------------|------|
+| Architectural decisions + reasoning | MemPalace (decisions hall) | Immediately when decided |
+| Reusable patterns discovered | MemPalace (patterns hall) | During Step 7 (Learn) |
+| Anti-patterns / gotchas | MemPalace (anti-patterns hall) | When encountered |
+| Project-specific fixes | MemPalace (fixes hall) | After debugging |
+| Session handoff notes | MemPalace + `docs/progress.md` | Session End (mandatory) |
+
+**Learned Rules Taxonomy** (from MemPalace):
+- **Halls** (by type): decisions, patterns, anti-patterns, fixes
+- **Rooms** (by topic): hooks, memory, agents, security, testing
+- **Wings** (by scope): global (cross-project) and project-specific
+
+**Quality filter:** ~46% of auto-learned rules are noise. Before storing, ask: *"Would this save time in a future session?"* If not, don't store it.
+
+> CLI skills: `learn` / `learn-eval` → `instinct-status` → `promote` → `prune`
 
 ## Bei Problemen
 
@@ -222,17 +272,29 @@ For complex tasks that benefit from a second perspective:
 
 ## Agent Orchestration
 
+### Subagents (single tasks)
+
 Use sub-agents proactively when the situation calls for it:
 
-| Situation | Agent type |
+| Situation | Agent (`.claude/agents/`) |
 |-----------|-----------|
-| Complex feature with multiple phases | **planner** — create implementation plan |
-| Code was just written or modified | **code-reviewer** — review for quality and bugs |
-| New feature or bug fix | **tdd-guide** — enforce test-first methodology |
-| System design decision needed | **architect** — evaluate trade-offs |
+| Complex feature with multiple phases | **planner** — decompose into phased plan |
+| Implementation of a plan phase | **implementer** — execute one phase with TDD |
+| Validate completed work against spec | **evaluator** — PASS/WARN/FAIL per phase |
+| Code was just written or modified | **reviewer** — review for quality, security, bugs |
+| Research before building | **researcher** — find existing solutions |
 | Touching auth, payments, user data | **security-reviewer** — check for vulnerabilities |
-| Build or type errors | **build-error-resolver** — fix incrementally |
-| SQL or schema changes | **database-reviewer** — check query performance and safety |
-| Unused code accumulating | **refactor-cleaner** — identify and remove dead code |
 
 Run independent agents in **parallel**. Don't wait for one to finish if another can start.
+
+### Agent Teams (complex multi-agent workflows)
+
+For tasks requiring 3+ parallel workstreams, use Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`, enabled in `.claude/settings.json`):
+
+- **3-5 teammates** for most workflows, 5-6 tasks per teammate
+- Each teammate owns different files to avoid conflicts
+- Shared task list with dependency tracking
+- Teammates communicate directly via mailbox
+- Use the **3-Agent Harness** pattern: planner → implementer → evaluator
+
+> Agent Teams work on both CLI and Cloud. Teammate definitions live in `.claude/agents/`.

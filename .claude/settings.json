@@ -1,0 +1,61 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Edit",
+      "MultiEdit",
+      "Write",
+      "Bash(*)",
+      "WebSearch",
+      "WebFetch",
+      "mcp__mempalace__*",
+      "mcp__playwright__*"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(sudo rm -rf *)"
+    ]
+  },
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"additionalContext\":\"Session started. Run Session Start protocol: load MemPalace context, check open work, read git log, read active plan, brief user.\"}}'",
+            "async": false
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"additionalContext\":\"Before editing: verify this change aligns with the active plan. After editing: review your own change for obvious issues.\"}}'",
+            "async": false
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"additionalContext\":\"Session ending. Run Session End protocol: store decisions, current state, patterns, and handoff note to MemPalace. Write docs/session-log.md if MemPalace unavailable.\"}}'",
+            "async": false
+          }
+        ]
+      }
+    ]
+  }
+}

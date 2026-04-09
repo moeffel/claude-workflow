@@ -95,10 +95,42 @@ for plugin in "${PLUGINS[@]}"; do
 done
 
 echo ""
+echo "Verifying repo-committed config (Cloud-ready)..."
+echo ""
+
+# .mcp.json and .claude/settings.json should already be committed to the repo
+# This ensures Cloud sessions get the same config as local
+if [ -f ".mcp.json" ]; then
+    echo "  .mcp.json ✓ (MCP servers declared for Cloud)"
+else
+    echo "  .mcp.json ✗ (Cloud MCP servers not configured)"
+fi
+
+if [ -f ".claude/settings.json" ]; then
+    echo "  .claude/settings.json ✓ (hooks + Agent Teams enabled for Cloud)"
+else
+    echo "  .claude/settings.json ✗ (Cloud hooks not configured)"
+fi
+
+if [ -d ".claude/agents" ]; then
+    AGENT_COUNT=$(ls -1 .claude/agents/*.md 2>/dev/null | wc -l)
+    echo "  .claude/agents/ ✓ (${AGENT_COUNT} agent definitions)"
+else
+    echo "  .claude/agents/ ✗ (no agent definitions)"
+fi
+
+if [ -d ".claude/skills" ]; then
+    SKILL_COUNT=$(ls -1d .claude/skills/*/ 2>/dev/null | wc -l)
+    echo "  .claude/skills/ ✓ (${SKILL_COUNT} custom skills)"
+else
+    echo "  .claude/skills/ ✗ (no custom skills)"
+fi
+
+echo ""
 echo "╔══════════════════════════════════════════════╗"
 echo "║  Done. Start Claude Code:                    ║"
 echo "║    claude                                    ║"
 echo "║                                              ║"
-echo "║  The Standard Workflow in CLAUDE.md is now    ║"
-echo "║  fully operational.                          ║"
+echo "║  Works on CLI, Desktop, IDE, AND Cloud.      ║"
+echo "║  All config is repo-committed — 100% Cloud.  ║"
 echo "╚══════════════════════════════════════════════╝"
