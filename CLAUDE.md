@@ -30,7 +30,7 @@ If MemPalace is not available, fall back to git log + plan docs + CLAUDE.md cont
 
 ### Step 0: Research & Reuse
 
-**Before writing ANY new code**, search for existing solutions:
+**Before writing ANY new code**, spawn the **researcher** agent or search manually:
 
 1. Search GitHub for existing implementations (`gh search code`, `gh search repos`)
 2. Check library docs for API behavior and patterns (Context7 or official docs)
@@ -38,7 +38,7 @@ If MemPalace is not available, fall back to git log + plan docs + CLAUDE.md cont
 4. Search the web for broader context only if steps 1-3 are insufficient
 5. Look for open-source projects that solve 80%+ of the problem
 
-Prefer adopting a proven approach over writing from scratch.
+Prefer adopting a proven approach over writing from scratch. **The researcher agent is ALWAYS the first to run** — no exceptions.
 
 > CLI skill chain: `search-first` → `docs` → `deep-research` → `exa-search`
 
@@ -297,4 +297,13 @@ For tasks requiring 3+ parallel workstreams, use Agent Teams (`CLAUDE_CODE_EXPER
 - Teammates communicate directly via mailbox
 - Use the **3-Agent Harness** pattern: planner → implementer → evaluator
 
+**Best practices:**
+- **Always plan before spawning** — the lead needs full scope first
+- **Pre-allocate file ownership** — each teammate gets exclusive write access to specific modules
+- **Read-heavy > write-heavy** — reviews, testing, analysis work best in parallel
+- **Cap at 5 teammates** — beyond that, coordination costs exceed benefits
+- **researcher runs first** — before any team spawns, research existing solutions
+- Quality gates via hooks: `TaskCompleted` (test gate), `TeammateIdle` (prevent premature stop)
+
 > Agent Teams work on both CLI and Cloud. Teammate definitions live in `.claude/agents/`.
+> Hooks for team quality gates configured in `.claude/settings.json`.

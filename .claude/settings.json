@@ -56,6 +56,30 @@
           }
         ]
       }
+    ],
+    "TaskCompleted": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"additionalContext\":\"Task completed. Verify: tests pass, no regressions, acceptance criteria met. If not, reopen the task.\"}}'",
+            "async": false
+          }
+        ]
+      }
+    ],
+    "TeammateIdle": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"additionalContext\":\"Teammate idle. Check shared task list for pending tasks. If all tasks done, report summary to lead.\"}}'",
+            "async": false
+          }
+        ]
+      }
     ]
   }
 }
