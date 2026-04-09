@@ -45,14 +45,21 @@ Integrates **superpowers** + **Everything Claude Code (ECC)** skills into one co
 
 ## Quick Start
 
-### Option 1: Use as GitHub Template
+### Option 1: Claude Cloud (zero setup)
 
-Click **"Use this template"** on GitHub → creates a new repo with the workflow pre-configured. Then:
+1. Click **"Use this template"** on GitHub → new repo
+2. Open on [claude.ai/code](https://claude.ai/code) → connect repo
+3. Start working. Everything activates automatically:
+   - MemPalace auto-installs on first session (SessionStart hook)
+   - All agents, skills, hooks, MCP config are repo-committed
+   - Agent Teams enabled
+
+### Option 2: CLI / Desktop / IDE
 
 ```bash
 git clone https://github.com/YOUR_USER/YOUR_NEW_REPO.git
 cd YOUR_NEW_REPO
-bash setup.sh    # installs all plugins (superpowers, ECC, codex, ui-ux-pro-max, ...)
+bash setup.sh    # installs plugins (superpowers, ECC, codex, ...) + MemPalace
 claude           # start working — workflow is active
 ```
 

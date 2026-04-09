@@ -6,6 +6,8 @@ On **CLI/Desktop**: Run `bash setup.sh` once after cloning to install plugins (s
 
 On **Claude Cloud**: No setup needed. This file IS the workflow — follow the instructions directly. Plugins, hooks, and MCP servers are declared in `.claude/settings.json` and `.mcp.json` (committed to the repo) and activate automatically on Cloud.
 
+> **100% Cloud-ready**: MemPalace auto-installs on first session via SessionStart hook. All agents, skills, hooks, and MCP config are repo-committed. No local setup required.
+
 ---
 
 ## Standard Workflow
