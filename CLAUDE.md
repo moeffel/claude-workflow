@@ -163,6 +163,8 @@ When spawning agents, choose the right model:
 
 Default to Sonnet. Only escalate to Opus when reasoning depth matters. Drop to Haiku for mechanical tasks.
 
+> **Advisor Strategy** (API/SDK only): Sonnet can auto-consult Opus mid-run via `advisor_20260301` tool — +2.7% accuracy, 11.9% cheaper than Opus alone. See [claude.com/blog/the-advisor-strategy](https://claude.com/blog/the-advisor-strategy).
+
 ## Design-Routing
 
 For ANY UI/design task (components, pages, styling, colors, typography, charts, layouts):
