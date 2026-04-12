@@ -77,15 +77,16 @@ Prefer adopting a proven approach over writing from scratch. **The researcher ag
 ### Step 3: Implement
 
 1. Execute the plan phase by phase. Do not skip ahead.
-2. For each phase, follow TDD strictly:
+2. Follow the `karpathy-guidelines` skill throughout — Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution.
+3. For each phase, follow TDD strictly:
    - **RED**: Write the test first. Run it. It MUST fail.
    - **GREEN**: Write the minimal code to make the test pass.
    - **IMPROVE**: Refactor while keeping tests green.
-3. Target 80%+ test coverage.
-4. Use parallel agents/subagents for independent tasks within a phase.
-5. After each file edit, review your own change for obvious issues before moving on.
+4. Target 80%+ test coverage.
+5. Use parallel agents/subagents for independent tasks within a phase.
+6. After each file edit, review your own change for obvious issues before moving on.
 
-> CLI skills: `superpowers:executing-plans` + `superpowers:subagent-driven-development` + `tdd` + `quality-gate`
+> CLI skills: `superpowers:executing-plans` + `superpowers:subagent-driven-development` + `tdd` + `quality-gate` + `karpathy-guidelines`
 
 ### Step 4: Review
 
@@ -93,6 +94,7 @@ Prefer adopting a proven approach over writing from scratch. **The researcher ag
    - **Correctness**: Does it do what was asked? Edge cases handled?
    - **Security**: No hardcoded secrets? Inputs validated? Queries parameterized? Auth checked?
    - **Quality**: Functions < 50 lines? Files < 800 lines? No deep nesting? Immutable patterns?
+   - **Karpathy check**: Every changed line traces to the request? No speculative code? No adjacent "improvements"?
    - **Tests**: Do tests cover the happy path AND error cases?
 2. For security-sensitive code (auth, payments, user input, DB, crypto): do an explicit security review.
 3. For database changes: review schema design, query performance, migration safety.
@@ -267,12 +269,19 @@ Every session generates knowledge. Capture it systematically:
 
 ## Coding Standards
 
+**Structural rules:**
 - **Immutability**: Create new objects, never mutate existing ones
 - **Small files**: 200-400 lines typical, 800 max. Functions < 50 lines.
 - **Error handling**: Explicit at every level. Never silently swallow errors.
 - **Input validation**: Validate at system boundaries. Fail fast with clear messages.
 - **Security**: No hardcoded secrets. Parameterized queries. Sanitized HTML. CSRF protection.
 - **No over-engineering**: Don't add features, abstractions, or "improvements" beyond what was asked.
+
+**Behavioral rules** (via `karpathy-guidelines` skill):
+- **Think Before Coding**: State assumptions explicitly. If uncertain, ask. Don't pick interpretations silently.
+- **Simplicity First**: Minimum code that solves the problem. No speculative abstractions. If 200 lines could be 50, rewrite.
+- **Surgical Changes**: Touch only what you must. Don't "improve" adjacent code. Match existing style. Every changed line traces to the request.
+- **Goal-Driven Execution**: Transform tasks into verifiable goals. Define `verify:` checkpoints. Loop until verified.
 
 ## Agent Orchestration
 
