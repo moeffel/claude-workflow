@@ -130,8 +130,9 @@ After completing a task, capture what was learned:
 2. What was surprising or non-obvious?
 3. What would you do differently next time?
 4. Document decisions and their reasoning in commit messages or docs.
+5. **Skill creation check** (via `hermes-patterns` skill): If the task was complex (5+ tool calls), overcame non-obvious errors, or revealed a reusable workflow — extract it into a new skill at `.claude/skills/<name>/SKILL.md`. Ask: *"Would this save time in a future session?"* If not, skip.
 
-> CLI skills: `learn` / `learn-eval` → `instinct-status` → `promote` → `prune`
+> CLI skills: `learn` / `learn-eval` → `instinct-status` → `promote` → `prune` + `hermes-patterns`
 
 ### Session End (MANDATORY — run before closing ANY session)
 
@@ -155,13 +156,19 @@ If MemPalace is not available, write a `docs/session-log.md` entry instead.
 
 ## Model-Routing
 
-When spawning agents, choose the right model:
+When spawning agents, choose the right model using concrete signals (via `hermes-patterns` skill):
 
 | Task type | Model | Why |
 |-----------|-------|-----|
 | Simple extraction, classification, formatting | **Haiku** | Fast, cheap ($0.80/M), 90% of Sonnet quality |
 | Code generation, reviews, research, most work | **Sonnet** (default) | Best cost/quality for coding ($3/M) |
 | Architecture, deep reasoning, root-cause analysis | **Opus** | Deepest reasoning ($15/M), use sparingly |
+
+**Quick routing test — use Haiku only when ALL true:**
+- Task is under ~160 characters / 28 words
+- No code blocks, file paths, or URLs involved
+- No complexity keywords: `debug`, `implement`, `refactor`, `architect`, `migrate`, `security`, `schema`, `auth`, `concurrency`
+- When in doubt, stay on Sonnet — wrong routing wastes more than it saves
 
 Default to Sonnet. Only escalate to Opus when reasoning depth matters. Drop to Haiku for mechanical tasks.
 
@@ -297,6 +304,12 @@ Use sub-agents proactively when the situation calls for it:
 | Code was just written or modified | **reviewer** — review for quality, security, bugs |
 | Research before building | **researcher** — find existing solutions |
 | Touching auth, payments, user data | **security-reviewer** — check for vulnerabilities |
+
+**Isolation rules** (via `hermes-patterns` skill):
+- **Fresh context**: Each subagent starts with zero parent history — brief it explicitly
+- **Restricted toolset**: Don't give tools the subagent doesn't need (evaluators shouldn't edit, researchers shouldn't commit)
+- **Depth limit**: Subagents must not spawn sub-subagents (max 1 delegation level)
+- **Scoped output**: Subagents return a summary with status, findings, artifacts, and follow-ups
 
 Run independent agents in **parallel**. Don't wait for one to finish if another can start.
 
